@@ -1,6 +1,6 @@
 // Photos published from the Sithara dashboard ("Photos & website" → Publish).
 // Online dashboard: read from Supabase public storage. Offline package: public/media/.
-// If neither has photos, the site simply uses its built-in products and gallery.
+// Product photos live only in the dashboard. The gallery keeps its built-in photos and adds published ones.
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { GALLERY, PRODUCTS } from "./data.js";
 
@@ -11,9 +11,11 @@ const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z]/g, "");
 const formOption = (name) => { const n = norm(name); return /shrimp|prawn|vannamei|tiger|scampi|poovalan/.test(n) ? 0 : /squid|cuttle|octopus/.test(n) ? 1 : /crab/.test(n) ? 3 : 2; };
 
 export function merge(manifest) {
+  // Product photos come only from the dashboard; until it has published one, the card shows a plain panel.
   if (!manifest) return { products: PRODUCTS, gallery: GALLERY };
+  const list = manifest.products || [];
   const products = PRODUCTS.map((p) => {
-    const hit = manifest.products?.find((m) => norm(m.name) === norm(p.n) || norm(m.name).startsWith(norm(p.n)) || norm(p.n).startsWith(norm(m.name)));
+    const hit = list.find((m) => norm(m.name) === norm(p.n)) || list.find((m) => norm(m.name).startsWith(norm(p.n)) || norm(p.n).startsWith(norm(m.name)));
     return hit ? { ...p, img: hit.image, alt: hit.alt || p.alt } : p;
   });
   for (const m of manifest.products || []) {

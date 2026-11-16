@@ -67,7 +67,7 @@ function Card({ p, i, onOpen }) {
       style={{ rotateX, rotateY, transformPerspective: 900 }}
       whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 300, damping: 24 }}>
       <motion.span className="glare" aria-hidden="true" style={{ background: glare, opacity: glareO }} />
-      <div className="ph"><span className="stamp" aria-hidden="true">EXPORT · COCHIN</span><img src={p.img} alt={p.alt} loading="lazy" /></div>
+      <div className="ph"><span className="stamp" aria-hidden="true">EXPORT · COCHIN</span>{p.img ? <img src={p.img} alt={p.alt} loading="lazy" /> : <span className="ph-empty" aria-hidden="true" />}</div>
       <div className="tx">
         <div><small>{p.tag}</small><h3>{p.n}</h3><p>{p.desc}</p></div>
         <span className="go" aria-hidden="true"><Plus /></span>
@@ -173,9 +173,9 @@ export function ProductSheet({ index, onClose, onNav, onQuote }) {
         </button>
         <div className="sheet-media">
           <AnimatePresence initial={false} mode="popLayout">
-            <motion.img key={p.img} src={p.img} alt={p.alt}
+            {p.img ? <motion.img key={p.img} src={p.img} alt={p.alt}
               initial={{ opacity: 0, x: dir.current * 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir.current * -40 }}
-              transition={{ duration: 0.45, ease: EASE }} />
+              transition={{ duration: 0.45, ease: EASE }} /> : <span key={"e" + p.n} className="ph-empty" aria-hidden="true" />}
           </AnimatePresence>
           <span className="stamp" aria-hidden="true">EXPORT · COCHIN</span>
         </div>

@@ -13,14 +13,14 @@ export const FORM_PRODUCTS = [
 ];
 
 export const PRODUCTS = [
-  { n: "Shrimps", img: "img/frozen-shrimp.webp", alt: "Frozen shrimp", tag: "Frozen", desc: "Frozen shrimp, packed to order.", form: "Frozen", grade: "By size, to your requirement", opt: 0 },
-  { n: "Cuttlefish", img: "img/frozen-cuttlefish.webp", alt: "Frozen cuttlefish", tag: "Frozen", desc: "Frozen cuttlefish.", form: "Frozen", grade: "By size, to your requirement", opt: 1 },
-  { n: "Squid", img: "img/frozen-squid.webp", alt: "Frozen squid", tag: "Frozen", desc: "Frozen squid.", form: "Frozen", grade: "By size, to your requirement", opt: 1 },
-  { n: "Indian Mackerel", img: "img/indian-mackerel.webp", alt: "Indian mackerel", tag: "Frozen", desc: "Frozen, graded by size.", form: "Frozen", grade: "Graded by size", opt: 2 },
-  { n: "Ribbon Fish", img: "img/frozen-ribbon-fish.webp", alt: "Frozen ribbon fish", tag: "Frozen", desc: "Frozen, packed to order.", form: "Frozen", grade: "By size, to your requirement", opt: 2 },
-  { n: "Mahi-Mahi", img: "img/mahi-mahi.webp", alt: "Mahi-mahi", tag: "Seafood", desc: "Mahi-mahi (dolphinfish).", form: "Fresh", grade: "By size, to your requirement", opt: 2 },
-  { n: "Live Mud Crabs", img: "img/live-mud-crab.webp", alt: "Live mud crab", tag: "Live", desc: "Live, packed to your requirement.", form: "Live", grade: "By size, to your requirement", opt: 3 },
-  { n: "Sardine", img: "img/frozen-sardines.webp", alt: "Frozen sardines", tag: "Frozen", desc: "Boxed, frozen.", form: "Frozen, boxed", grade: "By size, to your requirement", opt: 2 },
+  { n: "Shrimps", alt: "Frozen shrimp", tag: "Frozen", desc: "Frozen shrimp, packed to order.", form: "Frozen", grade: "By size, to your requirement", opt: 0 },
+  { n: "Cuttlefish", alt: "Frozen cuttlefish", tag: "Frozen", desc: "Frozen cuttlefish.", form: "Frozen", grade: "By size, to your requirement", opt: 1 },
+  { n: "Squid", alt: "Frozen squid", tag: "Frozen", desc: "Frozen squid.", form: "Frozen", grade: "By size, to your requirement", opt: 1 },
+  { n: "Indian Mackerel", alt: "Indian mackerel", tag: "Frozen", desc: "Frozen, graded by size.", form: "Frozen", grade: "Graded by size", opt: 2 },
+  { n: "Ribbon Fish", alt: "Frozen ribbon fish", tag: "Frozen", desc: "Frozen, packed to order.", form: "Frozen", grade: "By size, to your requirement", opt: 2 },
+  { n: "Mahi-Mahi", alt: "Mahi-mahi", tag: "Seafood", desc: "Mahi-mahi (dolphinfish).", form: "Fresh", grade: "By size, to your requirement", opt: 2 },
+  { n: "Live Mud Crabs", alt: "Live mud crab", tag: "Live", desc: "Live, packed to your requirement.", form: "Live", grade: "By size, to your requirement", opt: 3 },
+  { n: "Sardine", alt: "Frozen sardines", tag: "Frozen", desc: "Boxed, frozen.", form: "Frozen, boxed", grade: "By size, to your requirement", opt: 2 },
 ];
 
 export const ALSO = [
