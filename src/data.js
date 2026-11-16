@@ -99,14 +99,8 @@ export const STEPS = [
   ["Shipment", "Dispatched from Cochin to importers around the world."],
 ];
 
-export const GALLERY = [
-  ["g1", "img/shrimp-on-packing-table.webp", "Shrimp on packing table", "Shrimp on the packing table"],
-  ["g2", "img/fresh-mahi-mahi.webp", "Fresh mahi-mahi", "Fresh mahi-mahi"],
-  ["g3", "img/frozen-squid-blocks.webp", "Frozen squid blocks", "Frozen squid blocks"],
-  ["g4", "img/boxed-indian-mackerel.webp", "Boxed Indian mackerel", "Boxed Indian mackerel"],
-  ["g5", "img/cleaned-frozen-shrimp.webp", "Cleaned frozen shrimp", "Cleaned frozen shrimp"],
-  ["g6", "img/frozen-fish-trays.webp", "Frozen fish trays", "Frozen fish trays"],
-];
+// Gallery photos come from the Sithara dashboard ("Gallery photos" → Publish to website).
+export const GALLERY = [];
 
 export const QUOTES = [
   ["The seafood quality and freshness have been excellent. Their attention to product standards, careful handling and consistency make them a reliable export partner. We are very satisfied with the overall experience.", "Sathar", "Buyer · UAE"],

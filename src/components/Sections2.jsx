@@ -330,6 +330,7 @@ export function Gallery() {
   const openAt = useCallback((i) => { setOrigin(i); setOpen(i); }, []);
   const close = useCallback(() => { setOpen(null); }, []);
   const nav = useCallback((d) => setOpen((o) => (o + d + GALLERY.length) % GALLERY.length), [GALLERY.length]);
+  if (!GALLERY.length) return null; // nothing published from the dashboard yet
   return (
     <section className="gallery-s" id="gallery" aria-labelledby="gallery-title">
       <div className="wrap">
