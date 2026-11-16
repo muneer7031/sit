@@ -1,0 +1,78 @@
+/* Additions for the React + framer-motion build (layered on top of styles.css) */
+
+/* Preloader: framer-motion drives it now, so drop the CSS-only fallbacks */
+.pl { animation: none; }
+.pl-seal { visibility: visible; opacity: 0; }
+#pl-star, .pl-fish, #pl-lid, #pl-stamp { transform-box: fill-box; transform-origin: center; }
+
+/* Products: sticky pinned reel */
+.products-track { position: relative; }
+.products-sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding-top: 40px; }
+.products-sticky .reel-head { margin-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+.reel.pinned { will-change: transform; }
+
+/* Statement photo: framer handles the parallax, keep the image filling the frame */
+.wide-photo img { top: -10%; }
+
+/* Gallery images: framer parallax on a 124% tall image */
+.gallery figure img { will-change: transform; }
+
+/* FAQ as buttons (AnimatePresence handles the height) */
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-q { width: 100%; cursor: pointer; background: none; border: 0; color: inherit; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; padding: 1.5rem 0; font: 500 1.18rem/1.3 var(--font); letter-spacing: -0.02em; }
+.faq .pm.open { background: var(--ink); }
+.faq .pm.open::before, .faq .pm.open::after { background: var(--white); }
+.faq .pm.open::after { transform: translate(-50%, -50%) rotate(0deg); }
+
+/* Heritage stat rule is drawn by framer, hide the static one */
+.stat.anim::before { display: none; }
+
+/* Process ship rides on a framer motion value */
+.tship { left: 0; }
+
+/* ---------- Side spotlights: mounted above the header, same warm light as the centre, same flicker ---------- */
+/* sources sit off-screen above the page, pushed back along each beam's own angle so the beams still meet at the prawn */
+.side-light { position: absolute; top: -175px; width: 0; height: 0; pointer-events: none; }
+.side-light.l { left: calc(12% - 270px); }
+.side-light.r { right: calc(12% - 270px); }
+/* uses the centre light's blink keyframes, so all three lamps breathe and stutter together */
+.side-flick { position: absolute; left: 0; top: 0; width: 0; height: 0; animation: blinkLight 6.5s linear infinite; }
+.side-beam { position: absolute; left: 0; top: 0; width: min(620px, 70vw); height: min(1160px, calc(100vh + 340px)); transform-origin: 50% 0; mix-blend-mode: screen; filter: blur(24px);
+  background: linear-gradient(180deg, rgba(255,232,205,0.30) 0%, rgba(255,214,175,0.11) 55%, rgba(255,200,160,0) 94%);
+  clip-path: polygon(44% 0, 56% 0, 98% 100%, 2% 100%); }
+.side-beam.core { width: min(300px, 36vw); filter: blur(12px); clip-path: polygon(46% 0, 54% 0, 84% 100%, 16% 100%);
+  background: linear-gradient(180deg, rgba(255,246,232,0.38) 0%, rgba(255,230,200,0.07) 70%, transparent 96%); }
+.l .side-beam { transform: translateX(-50%) rotate(-57deg); }
+.r .side-beam { transform: translateX(-50%) rotate(57deg); }
+.side-lamp { position: absolute; left: -100px; top: -15px; width: 200px; height: 30px; border-radius: 50%; filter: blur(4px);
+  background: radial-gradient(closest-side, rgba(255,248,236,0.95), rgba(255,214,170,0.35) 60%, transparent); }
+.l .side-lamp { transform: rotate(-57deg); }
+.r .side-lamp { transform: rotate(57deg); }
+/* warm rim on both edges of the prawn from the side lamps */
+.prawn-float { filter: drop-shadow(0 34px 34px rgba(0,0,0,0.65)) drop-shadow(-7px -3px 14px rgba(255,214,175,0.24)) drop-shadow(7px -3px 14px rgba(255,214,175,0.24)) drop-shadow(0 -4px 22px rgba(255,214,175,0.16)); }
+/* no visible lamp heads: every light enters from beyond the top edge */
+.lamp, .side-lamp { display: none; }
+@media (max-width: 760px) { .side-light { top: -120px; } .side-light.l { left: calc(4% - 180px); } .side-light.r { right: calc(4% - 180px); } .side-beam { height: calc(62vh + 220px); } }
+
+/* Prawn lives in the text column: transparent PNG margins are pulled in so the tail sits just above the pill */
+.hero-center { --pw: min(760px, 118vw); grid-template-columns: minmax(0, 1fr); }
+/* the prawn may be wider than the column on phones; it overflows evenly instead of widening the text column */
+.hero-center .prawn-wrap { justify-self: center; }
+.hero-center .prawn-wrap { position: relative; left: calc(var(--pw) * -0.05); bottom: auto; width: var(--pw); max-width: none;
+  margin: calc(var(--pw) * -0.13) 0 calc(var(--pw) * -0.095); }
+.hero-center .pool { position: absolute; left: 50%; bottom: 16%; width: 92%; height: 110px; transform: translateX(-50%); }
+.hero-content { padding-top: 64px; }
+@media (max-width: 760px) {
+  .hero { justify-content: flex-end; }
+  .stage { position: absolute; height: 72%; }
+  .hero-content { margin-top: 0; padding-top: 80px; }
+  .hero-center { --pw: 128vw; }
+}
+
+/* Hero text stays crisp where it crosses the bright beams */
+.hero h1 .line > span { text-shadow: 0 2px 8px rgba(0,0,0,0.55), 0 8px 44px rgba(0,0,0,0.8); }
+.hero-sub { text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 24px rgba(0,0,0,0.85); color: rgba(255,255,255,0.84); }
+.hero .eyebrow { background: rgba(0,0,0,0.62); }
+
+/* Contact WhatsApp button inside a flex column */
+.contact .btn.wa { margin-top: 2rem; }
