@@ -117,5 +117,8 @@ body.pl-lock .scroll-progress { opacity: 0; }
 .sig .sig-hand { display: inline-block; font-family: "Mrs Saint Delafield", "Brush Script MT", cursive; font-size: 2.7rem; line-height: 1; color: var(--ink); padding: 0.1em 0.35em 0.05em 0; }
 .sig .sig-role { display: block; color: var(--muted); font-size: 0.9rem; margin-top: 0.1rem; }
 
+/* Italic serif accent words in section headlines share the brand orange (as in "your satisfaction.") */
+.h-lg em.s { color: var(--accent); }
+
 /* Contact WhatsApp button inside a flex column */
 .contact .btn.wa { margin-top: 2rem; }
