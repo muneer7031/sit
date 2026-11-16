@@ -6,7 +6,7 @@ import Nav from "./components/Nav.jsx";
 import Hero from "./components/Hero.jsx";
 import { ProductSheet, Products, Specs, Statement } from "./components/Sections1.jsx";
 import { Contact, Faq, Footer, Gallery, Heritage, Note, Process, Routes, Values, Voices, WaFab } from "./components/Sections2.jsx";
-import { PRODUCTS } from "./data.js";
+import { SiteMediaProvider, useSite } from "./site.jsx";
 import { track } from "./analytics.js";
 import { ScrollProgress } from "./motion.jsx";
 
@@ -14,6 +14,11 @@ const isServer = typeof window === "undefined";
 const seenBefore = () => { try { return localStorage.getItem("sx-seen") === "1"; } catch { return false; } };
 
 export default function App() {
+  return <SiteMediaProvider><Site /></SiteMediaProvider>;
+}
+
+function Site() {
+  const { products: PRODUCTS } = useSite();
   const reduce = useReducedMotion();
   const [loading, setLoading] = useState(!reduce && !isServer); // preloader every visit (skipped for reduced motion / build-time render)
   const [ready, setReady] = useState(!!reduce || isServer);       // hero intro trigger
@@ -55,7 +60,7 @@ export default function App() {
   }, [reduce]);
 
   /* Product sheet open/close: pause page scroll underneath */
-  const openSheet = useCallback((i) => { track("product_view", PRODUCTS[i].n); setSheet(i); lenis.current?.stop(); document.body.classList.add("sheet-open"); }, []);
+  const openSheet = useCallback((i) => { track("product_view", PRODUCTS[i]?.n); setSheet(i); lenis.current?.stop(); document.body.classList.add("sheet-open"); }, [PRODUCTS]);
   const closeSheet = useCallback(() => { setSheet(null); lenis.current?.start(); document.body.classList.remove("sheet-open"); }, []);
   const quote = useCallback((p) => {
     closeSheet();

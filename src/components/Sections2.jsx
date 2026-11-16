@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimate, useScroll, useTransform } from "framer-motion";
-import { CHAPTERS, DEST, EMAIL, FAQ, FAR, FORM_PRODUCTS, GALLERY, GENERATIONS, HOME, PHONE_DISPLAY, QUOTES, STEPS, VALUES, proj, wa } from "../data.js";
+import { useSite } from "../site.jsx";
+import { CHAPTERS, DEST, EMAIL, FAQ, FAR, FORM_PRODUCTS, GENERATIONS, HOME, PHONE_DISPLAY, QUOTES, STEPS, VALUES, proj, wa } from "../data.js";
 import { track } from "../analytics.js";
 import { Arrow, Counter, EASE, EASE_IO, Magnetic, MaskLines, Reveal, ScrollWords, ShipIcon, WaIcon, useParallax } from "../motion.jsx";
 
@@ -294,6 +295,7 @@ function Shot({ i, cls, src, alt, cap, hidden, onOpen }) {
 
 /* Photo expands from its tile to full screen (shared-layout animation) */
 function Lightbox({ i, origin, onClose, onNav }) {
+  const { gallery: GALLERY } = useSite();
   const [, src, alt, cap] = GALLERY[i];
   const closeRef = useRef(null);
   useEffect(() => {
@@ -322,11 +324,12 @@ function Lightbox({ i, origin, onClose, onNav }) {
 }
 
 export function Gallery() {
+  const { gallery: GALLERY } = useSite();
   const [open, setOpen] = useState(null);     // photo being shown
   const [origin, setOrigin] = useState(null); // tile it expanded from (it shrinks back there)
   const openAt = useCallback((i) => { setOrigin(i); setOpen(i); }, []);
   const close = useCallback(() => { setOpen(null); }, []);
-  const nav = useCallback((d) => setOpen((o) => (o + d + GALLERY.length) % GALLERY.length), []);
+  const nav = useCallback((d) => setOpen((o) => (o + d + GALLERY.length) % GALLERY.length), [GALLERY.length]);
   return (
     <section className="gallery-s" id="gallery" aria-labelledby="gallery-title">
       <div className="wrap">

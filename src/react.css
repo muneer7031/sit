@@ -122,3 +122,7 @@ body.pl-lock .scroll-progress { opacity: 0; }
 
 /* Contact WhatsApp button inside a flex column */
 .contact .btn.wa { margin-top: 2rem; }
+
+/* Gallery photos published from the dashboard */
+.gallery .gx { grid-column: span 4; grid-row: span 2; }
+@media (max-width: 640px) { .gallery .gx { grid-column: span 1; grid-row: span 1; } }

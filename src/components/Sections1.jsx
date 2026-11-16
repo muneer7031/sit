@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { ALSO, PRODUCTS, SPECS, wa } from "../data.js";
+import { ALSO, SPECS, wa } from "../data.js";
+import { useSite } from "../site.jsx";
 import { EASE, Reveal, ScrollWords, useParallax } from "../motion.jsx";
 
 /* ---------------- About statement ---------------- */
@@ -87,6 +88,7 @@ function usePinMode() {
 }
 
 export function Products({ onOpen }) {
+  const { products: PRODUCTS } = useSite();
   const pin = usePinMode();
   const track = useRef(null), reel = useRef(null);
   const [dist, setDist] = useState(0);
@@ -109,7 +111,7 @@ export function Products({ onOpen }) {
           <Reveal as="h2" id="products-title" className="h-lg" style={{ marginTop: "1.2rem" }}>Catch, selected <em className="s">and packed.</em></Reveal>
           <Reveal as="p" className="lead" delay={0.08}>A selection from our range. Tap any product for details. Don’t see your species? We source more than 20 varieties on request.</Reveal>
         </div>
-        <div className="reel-meta"><span>{pin ? "Scroll to explore" : "Swipe to explore"} · 8 lines</span>
+        <div className="reel-meta"><span>{pin ? "Scroll to explore" : "Swipe to explore"} · {PRODUCTS.length} lines</span>
           <div className="reel-progress"><motion.span style={{ scaleX: pin ? bar : 0.12 + nativeP * 0.88, transformOrigin: "left" }} /></div>
         </div>
       </div>
@@ -144,6 +146,7 @@ export function Products({ onOpen }) {
 
 /* ---------------- Product detail sheet ---------------- */
 export function ProductSheet({ index, onClose, onNav, onQuote }) {
+  const { products: PRODUCTS } = useSite();
   const p = PRODUCTS[index];
   const panel = useRef(null), closeBtn = useRef(null), dir = useRef(0);
   useEffect(() => { closeBtn.current?.focus(); }, []);
