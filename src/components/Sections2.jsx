@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimate, useScroll, useTransform } from "framer-motion";
 import { CHAPTERS, DEST, EMAIL, FAQ, FAR, FORM_PRODUCTS, GALLERY, GENERATIONS, HOME, PHONE_DISPLAY, QUOTES, STEPS, VALUES, proj, wa } from "../data.js";
 import { track } from "../analytics.js";
@@ -50,7 +50,10 @@ export function Routes() {
           <Reveal as="p" className="lead" style={{ marginTop: "1.2rem" }} delay={0.08}>Over the decades we have shipped to buyers in almost every part of the world, especially the Middle East and Asia, and to parts of Europe. Every order is dispatched from Cochin.</Reveal>
           <Reveal className="lane-filter" role="group" aria-label="Show shipping lanes by region" delay={0.14}>
             {[["all", "All lanes"], ["me", "Middle East"], ["as", "Asia"], ["eu", "Europe"]].map(([r, l]) => (
-              <motion.button key={r} type="button" aria-pressed={region === r} onClick={() => setRegion(r)} whileTap={{ scale: 0.95 }}>{l}</motion.button>
+              <motion.button key={r} type="button" aria-pressed={region === r} onClick={() => setRegion(r)} whileTap={{ scale: 0.95 }}>
+                {region === r && <motion.span layoutId="lane-pill" className="lane-pill" transition={{ type: "spring", stiffness: 420, damping: 34 }} />}
+                <span className="lane-label">{l}</span>
+              </motion.button>
             ))}
           </Reveal>
         </div>
@@ -202,14 +205,44 @@ export function Values() {
 }
 
 /* ---------------- Note from the third generation ---------------- */
+const NOTE = "Every shipment we send carries three generations of effort, and I take that seriously. Honest dealings, packing the way you ask for it, and the same care from the first order to the hundredth.";
+const HL = [5, 6, 7, 8]; // "three generations of effort," gets a marker underline
 export function Note() {
+  const words = NOTE.split(" ");
+  const NOTE_VIEW = { once: true, margin: "0px 0px -18% 0px" };
   return (
     <section className="note" aria-label="A note from the third generation">
       <div className="wrap inner">
         <p className="eyebrow">A note from the third generation</p>
-        <Reveal as="blockquote"><span className="q">“</span>Every shipment we send carries three generations of effort, and I take that seriously. Honest dealings, packing the way you ask for it, and the same care from the first order to the hundredth.<span className="q">”</span></Reveal>
-        <Reveal as="p" className="more" delay={0.1}>My grandfather, Mohammed, started Sithara Exports in 1967. In 1996 he handed it to my father, Shaji, and today it is my turn to carry it forward. Whether you have worked with us for years or are writing to us for the first time, I would be glad to hear from you personally.</Reveal>
-        <Reveal className="sig" delay={0.16}><img src="img/muzammil-third-generation-of-sithara-exp.webp" alt="" /><div><b>Muzammil</b><span>Third generation, Sithara Exports</span></div></Reveal>
+        <motion.div className="note-mark" aria-hidden="true" initial={{ opacity: 0, scale: 0.4, rotate: -24 }} whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+          viewport={NOTE_VIEW} transition={{ type: "spring", stiffness: 170, damping: 13 }}>“</motion.div>
+        <motion.blockquote initial="h" whileInView="s" viewport={NOTE_VIEW} variants={{ s: { transition: { staggerChildren: 0.045, delayChildren: 0.3 } } }}>
+          {words.map((w, i) => (
+            <motion.span key={i} className={"nw" + (HL.includes(i) ? " hl" : "")}
+              variants={{
+                h: { opacity: 0, y: 14, filter: "blur(6px)", ...(HL.includes(i) ? { backgroundSize: "0% 34%" } : {}) },
+                s: { opacity: 1, y: 0, filter: "blur(0px)", ...(HL.includes(i) ? { backgroundSize: "100% 34%" } : {}) },
+              }}
+              transition={{ duration: 0.7, ease: EASE, ...(HL.includes(i) ? { backgroundSize: { duration: 0.5, delay: 1.9 + (i - HL[0]) * 0.12, ease: "easeOut" } } : {}) }}>
+              {w}{i < words.length - 1 ? " " : ""}
+            </motion.span>
+          ))}
+        </motion.blockquote>
+        <Reveal as="p" className="more" delay={0.3}>My grandfather, Mohammed, started Sithara Exports in 1967. In 1996 he handed it to my father, Shaji, and today it is my turn to carry it forward. Whether you have worked with us for years or are writing to us for the first time, I would be glad to hear from you personally.</Reveal>
+        <motion.div className="sig" initial="h" whileInView="s" viewport={{ once: true, margin: "0px 0px -6% 0px" }}>
+          <span className="sig-photo">
+            <motion.img src="img/muzammil-third-generation-of-sithara-exp.webp" alt="" variants={{ h: { scale: 0.8, opacity: 0 }, s: { scale: 1, opacity: 1 } }} transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.1 }} />
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <motion.circle cx="32" cy="32" r="30" fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round"
+                variants={{ h: { pathLength: 0 }, s: { pathLength: 1 } }} transition={{ duration: 1.4, ease: EASE, delay: 0.2 }} />
+            </svg>
+          </span>
+          <div>
+            <motion.span className="sig-hand" aria-label="Muzammil"
+              variants={{ h: { clipPath: "inset(0 100% 0 0)" }, s: { clipPath: "inset(0 0% 0 0)" } }} transition={{ duration: 1.8, ease: [0.65, 0, 0.35, 1], delay: 0.45 }}>Muzammil</motion.span>
+            <motion.span className="sig-role" variants={{ h: { opacity: 0, y: 6 }, s: { opacity: 1, y: 0 } }} transition={{ duration: 0.8, delay: 1.5 }}>Third generation, Sithara Exports</motion.span>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -243,22 +276,64 @@ export function Process() {
 }
 
 /* ---------------- Gallery ---------------- */
-function Shot({ cls, src, alt, cap }) {
+function Shot({ i, cls, src, alt, cap, hidden, onOpen }) {
   const [ref, y] = useParallax(8);
   return (
     <Reveal as="figure" className={cls} ref={ref}>
-      <motion.img src={src} alt={alt} loading="lazy" style={{ y }} />
+      <button type="button" className="shot-btn" onClick={() => onOpen(i)} aria-label={`Open photo: ${cap}`}>
+        {!hidden && (
+          <motion.div className="shot-frame" layoutId={`shot-${i}`} transition={{ type: "spring", stiffness: 260, damping: 30 }}>
+            <motion.img src={src} alt={alt} loading="lazy" style={{ y }} />
+          </motion.div>
+        )}
+      </button>
       <figcaption>{cap}</figcaption>
     </Reveal>
   );
 }
+
+/* Photo expands from its tile to full screen (shared-layout animation) */
+function Lightbox({ i, origin, onClose, onNav }) {
+  const [, src, alt, cap] = GALLERY[i];
+  const closeRef = useRef(null);
+  useEffect(() => {
+    closeRef.current?.focus();
+    window.__sxLenis?.stop(); document.body.classList.add("sheet-open");
+    const key = (e) => { if (e.key === "Escape") onClose(); if (e.key === "ArrowRight") onNav(1); if (e.key === "ArrowLeft") onNav(-1); };
+    addEventListener("keydown", key);
+    return () => { removeEventListener("keydown", key); window.__sxLenis?.start(); document.body.classList.remove("sheet-open"); };
+  }, [onClose, onNav]);
+  return (
+    <motion.div className="lightbox" role="dialog" aria-modal="true" aria-label={cap} initial={{ opacity: 1 }} exit={{ opacity: 1 }}>
+      <motion.div className="lb-scrim" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }} />
+      <motion.div className="lb-frame" layoutId={`shot-${origin}`} transition={{ type: "spring", stiffness: 260, damping: 30 }}>
+        <AnimatePresence initial={false}>
+          <motion.img key={src} src={src} alt={alt} initial={{ opacity: 0, scale: 1.03 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45, ease: EASE }} />
+        </AnimatePresence>
+      </motion.div>
+      <motion.div className="lb-bar" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.25 } }} exit={{ opacity: 0, transition: { duration: 0.15 } }}>
+        <button type="button" onClick={() => onNav(-1)} aria-label="Previous photo">‹</button>
+        <span>{cap} · {i + 1} / {GALLERY.length}</span>
+        <button type="button" onClick={() => onNav(1)} aria-label="Next photo">›</button>
+        <button type="button" ref={closeRef} onClick={onClose} aria-label="Close photo" className="lb-x">✕</button>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export function Gallery() {
+  const [open, setOpen] = useState(null);     // photo being shown
+  const [origin, setOrigin] = useState(null); // tile it expanded from (it shrinks back there)
+  const openAt = useCallback((i) => { setOrigin(i); setOpen(i); }, []);
+  const close = useCallback(() => { setOpen(null); }, []);
+  const nav = useCallback((d) => setOpen((o) => (o + d + GALLERY.length) % GALLERY.length), []);
   return (
     <section className="gallery-s" id="gallery" aria-labelledby="gallery-title">
       <div className="wrap">
         <div className="head"><div><p className="eyebrow">Product gallery</p><Reveal as="h2" id="gallery-title" className="h-lg">Straight from <em className="s">the packing floor.</em></Reveal></div></div>
-        <div className="gallery">{GALLERY.map(([c, s, a, cap]) => <Shot key={c} cls={c} src={s} alt={a} cap={cap} />)}</div>
+        <div className="gallery">{GALLERY.map(([c, s, a, cap], i) => <Shot key={c} i={i} cls={c} src={s} alt={a} cap={cap} hidden={open !== null && origin === i} onOpen={openAt} />)}</div>
       </div>
+      <AnimatePresence>{open !== null && <Lightbox key="lb" i={open} origin={origin} onClose={close} onNav={nav} />}</AnimatePresence>
     </section>
   );
 }
@@ -374,6 +449,13 @@ export function Contact({ prefill }) {
           <AnimatePresence>
             {msg && (
               <motion.div className="ready" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: EASE }}>
+                <div className="ready-h">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <motion.circle cx="12" cy="12" r="10" fill="none" stroke="#34D399" strokeWidth="1.6" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, ease: EASE }} />
+                    <motion.path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#34D399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.45, delay: 0.45, ease: EASE }} />
+                  </svg>
+                  Your inquiry is ready to send
+                </div>
                 <pre>{msg}</pre>
                 <div className="row">
                   <a className="btn wa" href={wa(msg)} target="_blank" rel="noopener" style={{ margin: 0 }}>Send on WhatsApp</a>

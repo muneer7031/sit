@@ -105,6 +105,13 @@ export function Magnetic({ as = "a", className, children, strength = [0.28, 0.38
   );
 }
 
+/* Thin reading-progress line across the top of the page */
+export function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  return <motion.div className="scroll-progress" style={{ scaleX }} aria-hidden="true" />;
+}
+
 export const Arrow = () => (
   <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
 );

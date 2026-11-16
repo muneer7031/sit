@@ -8,6 +8,7 @@ import { ProductSheet, Products, Specs, Statement } from "./components/Sections1
 import { Contact, Faq, Footer, Gallery, Heritage, Note, Process, Routes, Values, Voices, WaFab } from "./components/Sections2.jsx";
 import { PRODUCTS } from "./data.js";
 import { track } from "./analytics.js";
+import { ScrollProgress } from "./motion.jsx";
 
 const isServer = typeof window === "undefined";
 const seenBefore = () => { try { return localStorage.getItem("sx-seen") === "1"; } catch { return false; } };
@@ -30,6 +31,7 @@ export default function App() {
     if (loading || reduce) return;
     const l = new Lenis({ lerp: 0.085, smoothWheel: true });
     lenis.current = l;
+    window.__sxLenis = l;
     let raf = requestAnimationFrame(function loop(t) { l.raf(t); raf = requestAnimationFrame(loop); });
     return () => { cancelAnimationFrame(raf); l.destroy(); lenis.current = null; };
   }, [loading, reduce]);
@@ -69,6 +71,7 @@ export default function App() {
     <>
       {loading && <Preloader quick={quick} onReveal={() => setReady(true)}
         onDone={() => { setLoading(false); try { localStorage.setItem("sx-seen", "1"); } catch { /* private mode */ } }} />}
+      <ScrollProgress />
       <Nav ready={ready} />
       <main id="top">
         <Hero ready={ready} />

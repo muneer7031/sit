@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { ALSO, PRODUCTS, SPECS, wa } from "../data.js";
 import { EASE, Reveal, ScrollWords, useParallax } from "../motion.jsx";
 
@@ -44,11 +44,28 @@ export function Statement() {
 /* ---------------- Products: pinned horizontal reel ---------------- */
 const Plus = () => <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>;
 
+/* Card tilts toward the cursor on a spring, with a soft glare that follows it */
 function Card({ p, i, onOpen }) {
+  const reduce = useReducedMotion();
+  const fine = typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const rx = useMotionValue(0), ry = useMotionValue(0), gx = useMotionValue(50), gy = useMotionValue(50), go = useMotionValue(0);
+  const spring = { stiffness: 220, damping: 20, mass: 0.6 };
+  const rotateX = useSpring(rx, spring), rotateY = useSpring(ry, spring), glareO = useSpring(go, spring);
+  const glare = useMotionTemplate`radial-gradient(260px circle at ${gx}% ${gy}%, rgba(255,255,255,0.28), transparent 62%)`;
+  const move = (e) => {
+    if (!fine || reduce) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+    ry.set((px - 0.5) * 12); rx.set(-(py - 0.5) * 10); gx.set(px * 100); gy.set(py * 100); go.set(1);
+  };
+  const leave = () => { rx.set(0); ry.set(0); go.set(0); };
   return (
     <motion.article className="p-card" tabIndex={0} role="button" aria-label={`View ${p.n} details`}
       onClick={() => onOpen(i)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(i); } }}
+      onPointerMove={move} onPointerLeave={leave}
+      style={{ rotateX, rotateY, transformPerspective: 900 }}
       whileHover={{ y: -4 }} whileTap={{ scale: 0.98 }} transition={{ type: "spring", stiffness: 300, damping: 24 }}>
+      <motion.span className="glare" aria-hidden="true" style={{ background: glare, opacity: glareO }} />
       <div className="ph"><span className="stamp" aria-hidden="true">EXPORT · COCHIN</span><img src={p.img} alt={p.alt} loading="lazy" /></div>
       <div className="tx">
         <div><small>{p.tag}</small><h3>{p.n}</h3><p>{p.desc}</p></div>

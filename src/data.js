@@ -110,8 +110,8 @@ export const GALLERY = [
 
 export const QUOTES = [
   ["The seafood quality and freshness have been excellent. Their attention to product standards, careful handling and consistency make them a reliable export partner. We are very satisfied with the overall experience.", "Sathar", "Buyer · UAE"],
-  ["What stands out is their commitment to quality and professionalism. The packaging is handled carefully, communication is smooth, and shipments are coordinated efficiently. A dependable partner for seafood exports.", "Saji", "Buyer · India"],
-  ["Working with the team has been a positive experience. They are responsive, transparent and committed to delivering quality products. Their reliability and personal approach make business easy.", "David", "Buyer · International"],
+  ["Working with the team has been a positive experience. They are responsive, transparent and committed to delivering quality products. Their reliability and personal approach make business easy.", "David", "Buyer · Netherlands"],
+  ["What stands out is their commitment to quality and professionalism. The packaging is handled carefully, communication is smooth, and shipments are coordinated efficiently. A dependable partner for seafood exports.", "Saji", "Buyer · South Korea"],
 ];
 
 export const FAQ = [

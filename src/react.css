@@ -74,5 +74,48 @@
 .hero-sub { text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 2px 24px rgba(0,0,0,0.85); color: rgba(255,255,255,0.84); }
 .hero .eyebrow { background: rgba(0,0,0,0.62); }
 
+/* ---------- Added animations ---------- */
+.scroll-progress { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; height: 2px; z-index: 61; transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--cream), var(--ember)); box-shadow: 0 0 10px rgba(238,122,66,0.6); pointer-events: none; }
+body.pl-lock .scroll-progress { opacity: 0; }
+.p-card { position: relative; will-change: transform; }
+.p-card .glare { position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; mix-blend-mode: soft-light; }
+.lane-filter button { position: relative; isolation: isolate; }
+.lane-filter button[aria-pressed="true"] { background: var(--paper); color: var(--white); }
+.lane-pill { position: absolute; inset: 0; z-index: -1; border-radius: 999px; background: var(--ink); }
+.lane-label { position: relative; }
+.shot-btn { position: absolute; inset: 0; padding: 0; border: 0; background: none; cursor: zoom-in; display: block; width: 100%; height: 100%; }
+.shot-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+.shot-frame { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+.gallery figure { cursor: zoom-in; }
+.gallery figcaption { pointer-events: none; z-index: 2; }
+.gallery figure::after { pointer-events: none; z-index: 1; }
+.lightbox { position: fixed; inset: 0; z-index: 96; display: grid; place-items: center;
+  padding: max(20px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(84px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.lb-scrim { position: absolute; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.lb-frame { position: relative; width: min(1100px, 100%); height: min(76vh, 760px); border-radius: 18px; overflow: hidden; background: #0b0b0c; }
+.lb-frame img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.lb-bar { position: absolute; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.45rem; border-radius: 999px; background: rgba(28,28,30,0.85); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12); color: #F5F5F7; font-size: 0.85rem; white-space: nowrap; }
+.lb-bar span { padding: 0 0.4rem; }
+.lb-bar button { cursor: pointer; width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(255,255,255,0.1); color: #fff; font-size: 1.2rem; line-height: 1; display: grid; place-items: center; }
+.lb-bar button:hover { background: rgba(255,255,255,0.2); }
+.lb-bar .lb-x { font-size: 0.9rem; }
+@media (max-width: 520px) { .lb-bar span { max-width: 46vw; overflow: hidden; text-overflow: ellipsis; } }
+.ready-h { display: flex; align-items: center; gap: 0.6rem; font-weight: 500; color: var(--snow); }
+.ready-h svg { width: 26px; height: 26px; flex: none; }
+
+/* ---------- Note from the third generation ---------- */
+.note-mark { font-family: var(--serif); font-size: clamp(5rem, 11vw, 8.5rem); line-height: 0.62; height: 0.48em; margin-top: 1.4rem; color: var(--accent); }
+.note blockquote { margin-top: 0.6rem; }
+.note .nw { display: inline-block; white-space: pre; }
+.note .nw.hl { background-image: linear-gradient(color-mix(in srgb, var(--accent) 28%, transparent), color-mix(in srgb, var(--accent) 28%, transparent));
+  background-repeat: no-repeat; background-position: 0 88%; background-size: 0% 34%; }
+.sig-photo { position: relative; width: 64px; height: 64px; display: grid; place-items: center; flex: none; }
+.sig-photo img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; box-shadow: none !important; }
+.sig-photo svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.sig .sig-hand { display: inline-block; font-family: "Mrs Saint Delafield", "Brush Script MT", cursive; font-size: 2.7rem; line-height: 1; color: var(--ink); padding: 0.1em 0.35em 0.05em 0; }
+.sig .sig-role { display: block; color: var(--muted); font-size: 0.9rem; margin-top: 0.1rem; }
+
 /* Contact WhatsApp button inside a flex column */
 .contact .btn.wa { margin-top: 2rem; }
