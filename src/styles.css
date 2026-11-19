@@ -712,3 +712,7 @@ body.pl-lock { overflow: hidden; }
 /* Opt out of browser-forced dark mode (e.g. Samsung Internet): the page already has the look the visitor chose */
 :root[data-theme="light"] { color-scheme: light only; }
 :root[data-theme="dark"] { color-scheme: dark only; }
+
+/* Quote form: hidden bot trap, and the "received" note */
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.ready-note { margin: 0.35rem 0 0.8rem; color: var(--ash); font-size: 0.9rem; }

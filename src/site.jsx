@@ -6,7 +6,22 @@ import { GALLERY, PRODUCTS } from "./data.js";
 
 const Ctx = createContext({ products: PRODUCTS, gallery: GALLERY });
 // Photos published from the online dashboard (Supabase public storage)
-const ONLINE = "https://ocdfjuvesnkimqiexqyw.supabase.co/storage/v1/object/public/public-media/manifest.json";
+const SUPABASE = "https://ocdfjuvesnkimqiexqyw.supabase.co";
+const ONLINE = `${SUPABASE}/storage/v1/object/public/public-media/manifest.json`;
+// Public (publishable) key: the database only lets the website ADD an enquiry, never read one.
+const PUBLIC_KEY = "sb_publishable_2jjbikbzWBwyFW_WAmmy0w_0TezcshU";
+
+/* Save a quote request to the Sithara dashboard ("Website enquiries"). Resolves true when saved. */
+export async function saveEnquiry(e) {
+  try {
+    const r = await fetch(`${SUPABASE}/rest/v1/enquiries`, {
+      method: "POST",
+      headers: { apikey: PUBLIC_KEY, Authorization: `Bearer ${PUBLIC_KEY}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify({ name: e.name.slice(0, 120), company: e.company.slice(0, 160) || null, email: e.email.slice(0, 200), country: e.country.slice(0, 80), product: e.product.slice(0, 120), requirement: e.requirement.slice(0, 3000) || null, source: "website" }),
+    });
+    return r.ok;
+  } catch { return false; }
+}
 const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z]/g, "");
 const formOption = (name) => { const n = norm(name); return /shrimp|prawn|vannamei|tiger|scampi|poovalan/.test(n) ? 0 : /squid|cuttle|octopus/.test(n) ? 1 : /crab/.test(n) ? 3 : 2; };
 

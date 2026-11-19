@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimate, useScroll, useTransform } from "framer-motion";
-import { useSite } from "../site.jsx";
+import { useSite, saveEnquiry } from "../site.jsx";
 import { CHAPTERS, DEST, EMAIL, FAQ, FAR, FORM_PRODUCTS, GENERATIONS, HOME, PHONE_DISPLAY, QUOTES, STEPS, VALUES, proj, wa } from "../data.js";
 import { track } from "../analytics.js";
 import { Arrow, Counter, EASE, EASE_IO, Magnetic, MaskLines, Reveal, ScrollWords, ShipIcon, WaIcon, useParallax } from "../motion.jsx";
@@ -401,7 +401,8 @@ export function Faq() {
 
 /* ---------------- Contact ---------------- */
 export function Contact({ prefill }) {
-  const [f, setF] = useState({ name: "", company: "", email: "", country: "", product: 0, req: "" });
+  const [f, setF] = useState({ name: "", company: "", email: "", country: "", product: 0, req: "", website: "" });
+  const [saved, setSaved] = useState(null); // null = not sent yet, true = saved to our system, false = not saved
   const [err, setErr] = useState(""), [msg, setMsg] = useState(""), [status, setStatus] = useState("");
   useEffect(() => {
     if (!prefill) return;
@@ -416,6 +417,9 @@ export function Contact({ prefill }) {
     if (!f.country.trim()) missing.push("your country");
     if (missing.length) { setErr("Add " + missing.join(", ") + " so we can reply."); setMsg(""); return; }
     setErr(""); setStatus(""); track("inquiry_prepared", FORM_PRODUCTS[f.product]);
+    // Also save it straight to Sithara's dashboard, so it isn't lost if WhatsApp/email is never sent.
+    // "website" is a hidden trap field that only bots fill in.
+    if (!f.website) { setSaved(null); saveEnquiry({ name: f.name.trim(), company: f.company.trim(), email: f.email.trim(), country: f.country.trim(), product: FORM_PRODUCTS[f.product], requirement: f.req.trim() }).then(setSaved); }
     setMsg(`Inquiry for Sithara Exports\nName: ${f.name}${f.company.trim() ? "\nCompany: " + f.company : ""}\nEmail: ${f.email}\nCountry: ${f.country}\nProduct: ${FORM_PRODUCTS[f.product]}${f.req.trim() ? "\nRequirement: " + f.req.trim() : ""}`);
   };
   const copy = () => navigator.clipboard.writeText(msg).then(() => setStatus(`Copied. Paste it into an email to ${EMAIL}`), () => setStatus("Select the text above and press Ctrl+C to copy."));
@@ -443,6 +447,7 @@ export function Contact({ prefill }) {
             <select id="q-product" value={f.product} onChange={(e) => setF((s) => ({ ...s, product: Number(e.target.value) }))}>
               {FORM_PRODUCTS.map((p, i) => <option key={p} value={i}>{p}</option>)}
             </select></div>
+          <div className="hp" aria-hidden="true"><label htmlFor="q-website">Website</label><input id="q-website" tabIndex={-1} autoComplete="off" value={f.website} onChange={set("website")} /></div>
           <div className="f full"><label htmlFor="q-req">Requirement</label><textarea id="q-req" value={f.req} onChange={set("req")} placeholder="Grade, quantity, packing and destination port" /></div>
           {err && <p className="form-err">{err}</p>}
           <div className="form-foot">
@@ -457,8 +462,9 @@ export function Contact({ prefill }) {
                     <motion.circle cx="12" cy="12" r="10" fill="none" stroke="#34D399" strokeWidth="1.6" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6, ease: EASE }} />
                     <motion.path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#34D399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.45, delay: 0.45, ease: EASE }} />
                   </svg>
-                  Your inquiry is ready to send
+                  {saved ? "We've received your inquiry" : "Your inquiry is ready to send"}
                 </div>
+                {saved && <p className="ready-note">Our team will reply soon. For a faster answer, you can also send it on WhatsApp.</p>}
                 <pre>{msg}</pre>
                 <div className="row">
                   <a className="btn wa" href={wa(msg)} target="_blank" rel="noopener" style={{ margin: 0 }}>Send on WhatsApp</a>
