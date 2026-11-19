@@ -8,7 +8,7 @@ import { initAnalytics } from "./analytics.js";
 initAnalytics();
 
 createRoot(document.getElementById("root")).render(
-  <MotionConfig reducedMotion="user">
+  <MotionConfig reducedMotion="never">
     <App />
   </MotionConfig>
 );

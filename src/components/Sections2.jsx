@@ -31,7 +31,6 @@ export function Routes() {
       s.setAttribute("opacity", Math.min(1, Math.sin(f * Math.PI) * 1.6).toFixed(2));
     });
     place(2600);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let raf = 0;
     const loop = (t) => { place(t); raf = requestAnimationFrame(loop); };
     const io = new IntersectionObserver(([e]) => {
@@ -499,7 +498,7 @@ export function WaFab({ ready }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     if (!ready) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
     const t1 = setTimeout(() => setOpen(true), 1900), t2 = setTimeout(() => setOpen(false), 6600);
     let iv;
     if (!reduce) iv = setInterval(() => {

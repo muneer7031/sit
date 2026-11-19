@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { ALSO, SPECS, wa } from "../data.js";
 import { useSite } from "../site.jsx";
 import { EASE, Reveal, ScrollWords, useParallax } from "../motion.jsx";
@@ -47,7 +47,7 @@ const Plus = () => <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10"
 
 /* Card tilts toward the cursor on a spring, with a soft glare that follows it */
 function Card({ p, i, onOpen }) {
-  const reduce = useReducedMotion();
+  const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
   const fine = typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   const rx = useMotionValue(0), ry = useMotionValue(0), gx = useMotionValue(50), gy = useMotionValue(50), go = useMotionValue(0);
   const spring = { stiffness: 220, damping: 20, mass: 0.6 };
@@ -78,10 +78,10 @@ function Card({ p, i, onOpen }) {
 
 function usePinMode() {
   const q = "(min-width: 900px) and (min-height: 680px)";
-  const [pin, setPin] = useState(() => typeof window !== "undefined" && window.matchMedia(q).matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [pin, setPin] = useState(() => typeof window !== "undefined" && window.matchMedia(q).matches);
   useEffect(() => {
     const m = window.matchMedia(q);
-    const f = () => setPin(m.matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const f = () => setPin(m.matches);
     m.addEventListener("change", f); return () => m.removeEventListener("change", f);
   }, []);
   return pin;

@@ -68,7 +68,7 @@ export function Counter({ to, from = 0 }) {
   const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
   useEffect(() => {
     if (!inView || !ref.current) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
     if (reduce) { ref.current.textContent = to; return; }
     const c = animate(from, to, { duration: 2.2, ease: [0.16, 1, 0.3, 1], onUpdate: (v) => { if (ref.current) ref.current.textContent = Math.round(v); } });
     return () => c.stop();

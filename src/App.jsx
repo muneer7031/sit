@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, useReducedMotion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
 import Preloader from "./components/Preloader.jsx";
 import Nav from "./components/Nav.jsx";
@@ -19,8 +19,8 @@ export default function App() {
 
 function Site() {
   const { products: PRODUCTS } = useSite();
-  const reduce = useReducedMotion();
-  const [loading, setLoading] = useState(!reduce && !isServer); // preloader every visit (skipped for reduced motion / build-time render)
+  const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
+  const [loading, setLoading] = useState(!reduce && !isServer); // preloader every visit (skipped only for the build-time render)
   const [ready, setReady] = useState(!!reduce || isServer);       // hero intro trigger
   const [quick] = useState(() => !isServer && seenBefore());       // repeat visitors get the 3-second version
   const [sheet, setSheet] = useState(null);

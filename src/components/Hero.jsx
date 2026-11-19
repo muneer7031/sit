@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Arrow, EASE, Magnetic, MaskLines } from "../motion.jsx";
 
 /* Slow ocean-depth contour lines that drift toward the pointer */
 function useContours(ref) {
   useEffect(() => {
     const c = ref.current, ctx = c.getContext("2d");
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
     let w = 0, h = 0, t = 0, raf = 0, vis = true, mx = 0, my = 0, tx = 0, ty = 0;
     function draw() {
       ctx.clearRect(0, 0, w, h);
@@ -44,7 +44,7 @@ function useContours(ref) {
 }
 
 export default function Hero({ ready }) {
-  const reduce = useReducedMotion();
+  const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
   const hero = useRef(null), canvas = useRef(null);
   useContours(canvas);
   const { scrollYProgress: p } = useScroll({ target: hero, offset: ["start start", "end start"] });

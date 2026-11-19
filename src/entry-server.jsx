@@ -5,7 +5,7 @@ import App from "./App.jsx";
 
 export function render() {
   return renderToString(
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion="never">
       <App />
     </MotionConfig>
   );
