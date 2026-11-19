@@ -708,3 +708,7 @@ body.pl-lock { overflow: hidden; }
 /* Header: theme switch at the top of the page, "Request a Quote" once the hero's button has scrolled away */
 .nav-swap { display: inline-flex; align-items: center; justify-content: flex-end; min-height: 40px; }
 .swap-item { display: inline-flex; }
+
+/* Opt out of browser-forced dark mode (e.g. Samsung Internet): the page already has the look the visitor chose */
+:root[data-theme="light"] { color-scheme: light only; }
+:root[data-theme="dark"] { color-scheme: dark only; }

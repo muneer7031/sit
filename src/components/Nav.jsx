@@ -9,6 +9,8 @@ function ThemeToggle() {
   const flip = () => {
     const next = theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
+    // tell the browser the page's own look, so built-in "dark mode for websites" doesn't repaint it
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", `${next} only`);
     try { localStorage.setItem("sx-theme", next); } catch { /* private mode: applies to this visit only */ }
     setTheme(next);
   };

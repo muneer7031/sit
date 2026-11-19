@@ -9,9 +9,9 @@
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="author" content="Sithara Exports" />
     <meta name="theme-color" content="#030507" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="dark only" />
     <!-- Theme: dark unless the visitor picked light (remembered on their device). Runs before paint. -->
-    <script>try{document.documentElement.dataset.theme=localStorage.getItem("sx-theme")==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+    <script>(function(){var t="dark";try{if(localStorage.getItem("sx-theme")==="light")t="light"}catch(e){}document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="color-scheme"]');if(m)m.content=t+" only"})()</script>
     <link rel="canonical" href="https://sit-virid.vercel.app/" />
     <link rel="icon" href="./img/sithara-exports-logo.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="./img/sithara-exports-logo.svg" />
