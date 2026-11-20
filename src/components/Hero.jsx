@@ -102,7 +102,7 @@ export default function Hero({ ready }) {
           {/* The prawn sits in the same column as the text, so it can never collide with the pill at any screen size */}
           <motion.div className="prawn-wrap" aria-hidden="true" initial={{ y: 36 }} animate={on ? { y: 0 } : undefined} transition={{ duration: 2, ease: EASE, delay: 0.45 }}>
             <motion.div className="pool" initial={{ opacity: 0 }} animate={on ? { opacity: 1 } : undefined} transition={{ duration: 1.4, delay: 0.8 }} />
-            <div className="prawn-float" style={{ "--prawn-mask": 'url("img/prawn.webp")' }}>
+            <div className="prawn-float" style={{ "--prawn-mask": 'url("/img/prawn.webp")' }}>
               <motion.img className="prawn" src="img/prawn.webp" alt="" width="677" height="369" fetchpriority="high"
                 initial={{ opacity: 0, filter: "brightness(0.15) blur(6px)" }}
                 animate={on ? { opacity: 1, filter: "brightness(1) blur(0px)" } : undefined}

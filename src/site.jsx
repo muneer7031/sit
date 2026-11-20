@@ -55,7 +55,7 @@ export function SiteMediaProvider({ children }) {
   const [testimonials, setTestimonials] = useState([]);
   useEffect(() => {
     fetch(`${SUPABASE}/storage/v1/object/public/public-media/testimonials.json`, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
-      .then((d) => setTestimonials(Array.isArray(d?.items) ? d.items.filter((t) => t && t.quote && (t.company || t.name)) : []));
+      .then((d) => setTestimonials(d?.show !== false && Array.isArray(d?.items) ? d.items.filter((t) => t && t.quote && (t.company || t.name)) : [])); // show:false = section switched off in the dashboard
   }, []);
   // Offers published from the dashboard (offer page → "Show on the website" → public-media/offers.json)
   const [offers, setOffers] = useState([]);
