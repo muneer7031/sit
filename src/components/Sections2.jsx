@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimate, useScroll, useTransform } from "framer-motion";
-import { useSite, saveEnquiry } from "../site.jsx";
-import { CHAPTERS, DEST, EMAIL, FAQ, FAR, FORM_PRODUCTS, GENERATIONS, HOME, PHONE_DISPLAY, QUOTES, STEPS, VALUES, proj, wa } from "../data.js";
+import { useSite, submitEnquiry, TURNSTILE_SITE_KEY } from "../site.jsx";
+import { DEST, EMAIL, FAQ, FAR, FORM_PRODUCTS, GENERATIONS, HOME, PHONE, PHONE_DISPLAY, STEPS, proj, wa } from "../data.js";
 import { track } from "../analytics.js";
 import { Arrow, Counter, EASE, EASE_IO, Magnetic, MaskLines, Reveal, ScrollWords, ShipIcon, WaIcon, useParallax } from "../motion.jsx";
 
@@ -19,7 +19,7 @@ export function Routes() {
   const [region, setRegion] = useState("all");
   const lanes = useMemo(() => [
     ...DEST.map((d) => { const [x, y] = proj(d.lon, d.lat); return { ...d, x, y, d: arc(HOME[0], HOME[1], x, y, 0.22) }; }),
-    ...FAR.map(([x, y]) => ({ r: "far", far: true, d: arc(HOME[0], HOME[1], x, y, 0.12) })),
+    ...FAR.map((f) => ({ ...f, r: "world", far: true, d: arc(HOME[0], HOME[1], f.x, f.y, 0.14) })),
   ], []);
   const paths = useRef([]), ships = useRef([]), map = useRef(null);
   useEffect(() => {
@@ -46,10 +46,10 @@ export function Routes() {
       <div className="wrap routes-grid">
         <div>
           <p className="eyebrow">Shipping lanes</p>
-          <Reveal as="h2" id="routes-title" className="h-lg" style={{ marginTop: "1.2rem" }}>From Cochin to <em className="s">almost every part of the world.</em></Reveal>
-          <Reveal as="p" className="lead" style={{ marginTop: "1.2rem" }} delay={0.08}>Over the decades we have shipped to buyers in almost every part of the world, especially the Middle East and Asia, and to parts of Europe. Every order is dispatched from Cochin.</Reveal>
+          <Reveal as="h2" id="routes-title" className="h-lg" style={{ marginTop: "1.2rem" }}>From Cochin to <em className="s">every part of the world.</em></Reveal>
+          <Reveal as="p" className="lead" style={{ marginTop: "1.2rem" }} delay={0.08}>Over the decades we have shipped to buyers in every part of the world, most often in the Middle East, Asia and Europe. Every order is dispatched from Cochin.</Reveal>
           <Reveal className="lane-filter" role="group" aria-label="Show shipping lanes by region" delay={0.14}>
-            {[["all", "All lanes"], ["me", "Middle East"], ["as", "Asia"], ["eu", "Europe"]].map(([r, l]) => (
+            {[["all", "All lanes"], ["me", "Middle East"], ["as", "Asia"], ["eu", "Europe"], ["world", "Africa, Americas & Australia"]].map(([r, l]) => (
               <motion.button key={r} type="button" aria-pressed={region === r} onClick={() => setRegion(r)} whileTap={{ scale: 0.95 }}>
                 {region === r && <motion.span layoutId="lane-pill" className="lane-pill" transition={{ type: "spring", stiffness: 420, damping: 34 }} />}
                 <span className="lane-label">{l}</span>
@@ -58,7 +58,7 @@ export function Routes() {
           </Reveal>
         </div>
         <Reveal className="map" ref={map}>
-          <svg viewBox="0 0 640 310" role="img" aria-label="Shipping lanes from Cochin to destinations across the Middle East, Asia and Europe">
+          <svg viewBox="0 0 640 310" role="img" aria-label="Shipping lanes from Cochin to the Middle East, Asia, Europe, Africa, the Americas and Australia">
             <defs>
               <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#F2E8D0" fillOpacity="0.2" /></pattern>
               <radialGradient id="fade" cx="55%" cy="60%" r="65%"><stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></radialGradient>
@@ -67,11 +67,11 @@ export function Routes() {
             <rect width="640" height="310" fill="url(#dots)" mask="url(#mapmask)" />
             {[["EUROPE", 92, 26], ["MIDDLE EAST", 226, 112], ["ASIA", 540, 84]].map(([t, x, y]) => <text key={t} x={x} y={y} className="region" textAnchor="middle">{t}</text>)}
             {lanes.map((l, i) => l.far
-              ? <path key={i} ref={(el) => (paths.current[i] = el)} className="lane far" d={l.d} />
+              ? <path key={i} ref={(el) => (paths.current[i] = el)} className={"lane far" + dim(l.r)} d={l.d} />
               : <motion.path key={i} ref={(el) => (paths.current[i] = el)} className={"lane" + dim(l.r)} d={l.d}
                   initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true, margin: "0px 0px -15% 0px" }}
                   transition={{ duration: 1.4, ease: "easeInOut", delay: i * 0.07 }} />)}
-            {lanes.map((l, i) => <circle key={i} ref={(el) => (ships.current[i] = el)} className={"mship" + (l.far ? " far" : "") + dim(l.r)} r={l.far ? 2.2 : 2.8} />)}
+            {lanes.map((l, i) => <circle key={i} ref={(el) => (ships.current[i] = el)} className={"mship" + (l.far ? " far" : "") + dim(l.r)} r={l.far ? 2.4 : 2.8} />)}
             {lanes.filter((l) => !l.far).map((l, i) => (
               <g key={l.n} className={dim(l.r).trim()}>
                 <circle className="ring" cx={l.x} cy={l.y} r="3" style={{ animationDelay: `${(i * 0.37) % 2.6}s` }} />
@@ -84,7 +84,7 @@ export function Routes() {
             <circle className="node home" cx={HOME[0]} cy={HOME[1]} r="5" />
             <text x={HOME[0] - 4} y={HOME[1] + 20} textAnchor="middle" className="home-t">Cochin</text>
             <text x={HOME[0] - 4} y={HOME[1] + 32} textAnchor="middle" className="sm">PORT OF LOADING</text>
-            <text x="20" y="286" className="sm">AND BEYOND</text>
+            {lanes.filter((l) => l.far).map((l) => <text key={l.n} x={l.tx} y={l.ty} textAnchor={l.a} className={"sm far-t" + dim(l.r)}>{l.n}</text>)}
           </svg>
         </Reveal>
       </div>
@@ -168,37 +168,6 @@ export function Heritage() {
           <p>“Sithara” means aspiring star, a name we have carried for three generations.</p>
         </Reveal>
 
-        <div className="chaps">
-          {CHAPTERS.map((c) => (
-            <Reveal className="chap" key={c.ct}>
-              <div className="ct">{c.ct}</div>
-              <div><h3>{c.h}</h3><p>{c.p}</p>{c.chips && <div className="chips">{c.chips.map((x) => <span key={x}>{x}</span>)}</div>}</div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------------- Values bento ---------------- */
-export function Values() {
-  const spot = (e) => { const t = e.currentTarget, r = t.getBoundingClientRect(); t.style.setProperty("--mx", e.clientX - r.left + "px"); t.style.setProperty("--my", e.clientY - r.top + "px"); };
-  return (
-    <section className="values" aria-labelledby="values-title">
-      <div className="wrap">
-        <div className="head center">
-          <p className="eyebrow">What we stand for</p>
-          <Reveal as="h2" id="values-title" className="h-lg">Disciplined, customer focused <em className="s">and easy to work with.</em></Reveal>
-        </div>
-        <div className="bento">
-          {VALUES.map((v, i) => (
-            <Reveal key={v.h} className={`tile ${v.cls || ""}`} delay={(i % 3) * 0.08} onPointerMove={spot}>
-              {v.photo ? (<><img src={v.photo} alt="" loading="lazy" /><div><h3>{v.h}</h3><p>{v.p}</p></div></>)
-                : (<><span className="k">{v.k}</span><h3>{v.h}</h3><p>{v.p}</p></>)}
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -343,24 +312,24 @@ export function Gallery() {
 
 /* ---------------- Testimonials ---------------- */
 export function Voices() {
+  const { testimonials } = useSite();
+  if (!testimonials.length) return null; // hidden until testimonials are switched on in the dashboard
   return (
     <section className="voices" id="testimonials" aria-labelledby="t-title">
       <div className="wrap">
         <div className="head center">
           <p className="eyebrow">Testimonials</p>
           <Reveal as="h2" id="t-title" className="h-lg">In our buyers’ <em className="s">own words.</em></Reveal>
-          <Reveal as="p" className="lead" delay={0.08}>What importers say about working with Sithara Exports.</Reveal>
         </div>
         <div className="quotes">
-          {QUOTES.map(([q, n, r], i) => (
-            <Reveal as="figure" key={n} delay={i * 0.1} whileHover={{ y: -4 }}>
+          {testimonials.map((t, i) => (
+            <Reveal as="figure" key={i} delay={i * 0.1} whileHover={{ y: -4 }}>
               <div className="mark" aria-hidden="true">“</div>
-              <blockquote>{q}</blockquote>
-              <figcaption><span className="av" aria-hidden="true">{n[0]}</span><div><b>{n}</b><span>{r}</span></div></figcaption>
+              <blockquote>{t.quote}</blockquote>
+              <figcaption><span className="av" aria-hidden="true">{(t.company || t.name || "?")[0]}</span><div><b>{t.name || t.company}</b><span>{[t.role, t.company, t.country].filter(Boolean).join(" · ")}</span></div></figcaption>
             </Reveal>
           ))}
         </div>
-        <p className="share">Worked with Sithara Exports? We’d love to hear from you. <a href={wa("Hello Sithara Exports, I'd like to share my experience.")} target="_blank" rel="noopener">Share your experience ›</a></p>
       </div>
     </section>
   );
@@ -401,28 +370,44 @@ export function Faq() {
 
 /* ---------------- Contact ---------------- */
 export function Contact({ prefill }) {
-  const [f, setF] = useState({ name: "", company: "", email: "", country: "", product: 0, volume: "", port: "", req: "", website: "" });
-  const [saved, setSaved] = useState(null); // null = not sent yet, true = saved to our system, false = not saved
-  const [err, setErr] = useState(""), [msg, setMsg] = useState(""), [status, setStatus] = useState("");
+  const [f, setF] = useState({ name: "", company: "", email: "", country: "", product: "", volume: "", port: "", req: "", website: "" });
+  const [saved, setSaved] = useState(null); // null = not sent yet, true = received, false = not saved
+  const [errs, setErrs] = useState({}), [sending, setSending] = useState(false), [msg, setMsg] = useState(""), [status, setStatus] = useState(""), [srvErr, setSrvErr] = useState("");
+  const shownAt = useRef(Date.now()); // people take a few seconds to fill the form; bots don't
+  const ts = useRef(null), tsToken = useRef("");
   useEffect(() => {
     if (!prefill) return;
-    setF((s) => ({ ...s, product: prefill.opt, req: s.req.trim() ? s.req : `Product: ${prefill.n}\nGrade / size: \nPacking: ` }));
+    setF((s) => ({ ...s, product: String(prefill.opt), req: s.req.trim() ? s.req : `Product: ${prefill.n}\nGrade / size: \nPacking: ` }));
   }, [prefill]);
-  const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
-  const submit = (e) => {
+  // Cloudflare Turnstile human check (only when a site key is configured in site.jsx)
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || !ts.current) return;
+    const render = () => window.turnstile?.render(ts.current, { sitekey: TURNSTILE_SITE_KEY, theme: "dark", callback: (t) => { tsToken.current = t; }, "expired-callback": () => { tsToken.current = ""; } });
+    if (window.turnstile) { render(); return; }
+    const sc = document.createElement("script"); sc.src = "https://challenges.cloudflare.com/turnstile/v0/api.js"; sc.async = true; sc.onload = render; document.head.appendChild(sc);
+  }, []);
+  const set = (k) => (e) => { const v = e.target.value; setF((s) => ({ ...s, [k]: v })); if (errs[k]) setErrs((x) => ({ ...x, [k]: "" })); };
+  const submit = async (e) => {
     e.preventDefault();
-    const missing = [];
-    if (!f.name.trim()) missing.push("your name");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) missing.push("a valid email");
-    if (!f.country.trim()) missing.push("your country");
-    if (!f.volume.trim()) missing.push("the volume you need");
-    if (!f.port.trim()) missing.push("your destination port");
-    if (missing.length) { setErr("Add " + (missing.length > 1 ? missing.slice(0, -1).join(", ") + " and " + missing[missing.length - 1] : missing[0]) + " so we can reply."); setMsg(""); return; }
-    setErr(""); setStatus(""); track("inquiry_prepared", FORM_PRODUCTS[f.product]);
-    // Also save it straight to Sithara's dashboard, so it isn't lost if WhatsApp/email is never sent.
-    // "website" is a hidden trap field that only bots fill in.
-    if (!f.website) { setSaved(null); saveEnquiry({ name: f.name.trim(), company: f.company.trim(), email: f.email.trim(), country: f.country.trim(), product: FORM_PRODUCTS[f.product], requirement: [`Volume: ${f.volume.trim()}`, `Destination port: ${f.port.trim()}`, f.req.trim()].filter(Boolean).join("\n") }).then(setSaved); }
-    setMsg(`Inquiry for Sithara Exports\nName: ${f.name}${f.company.trim() ? "\nCompany: " + f.company : ""}\nEmail: ${f.email}\nCountry: ${f.country}\nProduct: ${FORM_PRODUCTS[f.product]}\nVolume: ${f.volume.trim()}\nDestination port: ${f.port.trim()}${f.req.trim() ? "\nRequirement: " + f.req.trim() : ""}`);
+    const er = {};
+    if (!f.name.trim()) er.name = "Add your name.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) er.email = "Add a valid email so we can reply.";
+    if (!f.country.trim()) er.country = "Add your country.";
+    if (f.product === "") er.product = "Choose a product.";
+    if (!f.volume.trim()) er.volume = "Add the volume you need.";
+    if (!f.port.trim()) er.port = "Add your destination port.";
+    setErrs(er); setSrvErr(""); setStatus("");
+    if (Object.keys(er).length) { document.getElementById("q-" + Object.keys(er)[0])?.focus(); setMsg(""); return; }
+    const product = FORM_PRODUCTS[Number(f.product)];
+    track("inquiry_prepared", product);
+    setMsg(`Inquiry for Sithara Exports\nName: ${f.name}${f.company.trim() ? "\nCompany: " + f.company : ""}\nEmail: ${f.email}\nCountry: ${f.country}\nProduct: ${product}\nVolume: ${f.volume.trim()}\nDestination port: ${f.port.trim()}${f.req.trim() ? "\nRequirement: " + f.req.trim() : ""}`);
+    setSending(true); setSaved(null);
+    const r = await submitEnquiry({ name: f.name.trim(), company: f.company.trim(), email: f.email.trim(), country: f.country.trim(), product,
+      requirement: [`Volume: ${f.volume.trim()}`, `Destination port: ${f.port.trim()}`, f.req.trim()].filter(Boolean).join("\n"),
+      website: f.website, elapsed: Date.now() - shownAt.current, turnstile: tsToken.current });
+    setSending(false); setSaved(r.ok);
+    if (!r.ok && r.error) setSrvErr(r.error);
+    if (TURNSTILE_SITE_KEY) { window.turnstile?.reset(ts.current); tsToken.current = ""; }
   };
   const copy = () => navigator.clipboard.writeText(msg).then(() => setStatus(`Copied. Paste it into an email to ${EMAIL}`), () => setStatus("Select the text above and press Ctrl+C to copy."));
   return (
@@ -432,31 +417,34 @@ export function Contact({ prefill }) {
         <div>
           <p className="eyebrow">Contact</p>
           <MaskLines as="h2" id="contact-title" className="h-xl" lines={["Let’s talk about", <em className="s">your next order.</em>]} />
-          <Reveal as="p" className="lead">Send your requirement and we’ll respond with specifications and availability.</Reveal>
+          <Reveal as="p" className="lead">Send your requirement and we’ll reply with prices and availability.</Reveal>
           <Reveal as="dl" className="lines" delay={0.08}>
             <div><dt>Location</dt><dd>Chandiroor, near Aroor, Cochin, Kerala, India</dd></div>
-            <div><dt>Email</dt><dd>{EMAIL}</dd></div>
-            <div><dt>Phone / WhatsApp</dt><dd>{PHONE_DISPLAY}</dd></div>
+            <div><dt>Email</dt><dd><a href={`mailto:${EMAIL}`}>{EMAIL}</a></dd></div>
+            <div><dt>Phone / WhatsApp</dt><dd><a href={`tel:+${PHONE}`}>{PHONE_DISPLAY}</a> · <a href={wa()} target="_blank" rel="noopener">WhatsApp</a></dd></div>
           </Reveal>
           <Magnetic className="btn wa" href={wa()} target="_blank" rel="noopener"><WaIcon /> Chat on WhatsApp</Magnetic>
         </div>
         <Reveal as="form" className="inq" noValidate onSubmit={submit}>
-          <div className="f"><label htmlFor="q-name">Name</label><input id="q-name" autoComplete="name" value={f.name} onChange={set("name")} required /></div>
-          <div className="f"><label htmlFor="q-company">Company</label><input id="q-company" autoComplete="organization" value={f.company} onChange={set("company")} /></div>
-          <div className="f"><label htmlFor="q-email">Email</label><input id="q-email" type="email" autoComplete="email" value={f.email} onChange={set("email")} required /></div>
-          <div className="f"><label htmlFor="q-country">Country</label><input id="q-country" autoComplete="country-name" value={f.country} onChange={set("country")} required /></div>
-          <div className="f full"><label htmlFor="q-product">Product</label>
-            <select id="q-product" value={f.product} onChange={(e) => setF((s) => ({ ...s, product: Number(e.target.value) }))}>
+          <p className="req-note">Fields marked <b className="req">*</b> are required.</p>
+          <div className={`f${errs.name ? " bad" : ""}`}><label htmlFor="q-name">Name <b className="req" aria-hidden="true">*</b></label><input id="q-name" autoComplete="name" value={f.name} onChange={set("name")} placeholder="e.g. Ahmed Al Mansoori" required aria-invalid={!!errs.name} aria-describedby={errs.name ? "q-name-err" : undefined} />{errs.name && <span className="f-err" id="q-name-err">{errs.name}</span>}</div>
+          <div className={`f${errs.company ? " bad" : ""}`}><label htmlFor="q-company">Company <span className="opt">(optional)</span></label><input id="q-company" autoComplete="organization" value={f.company} onChange={set("company")} placeholder="e.g. Gulf Fresh Foods LLC" />{errs.company && <span className="f-err" id="q-company-err">{errs.company}</span>}</div>
+          <div className={`f${errs.email ? " bad" : ""}`}><label htmlFor="q-email">Email <b className="req" aria-hidden="true">*</b></label><input id="q-email" type="email" autoComplete="email" inputMode="email" value={f.email} onChange={set("email")} placeholder="you@company.com" required aria-invalid={!!errs.email} aria-describedby={errs.email ? "q-email-err" : undefined} />{errs.email && <span className="f-err" id="q-email-err">{errs.email}</span>}</div>
+          <div className={`f${errs.country ? " bad" : ""}`}><label htmlFor="q-country">Country <b className="req" aria-hidden="true">*</b></label><input id="q-country" autoComplete="country-name" value={f.country} onChange={set("country")} placeholder="e.g. United Arab Emirates" required aria-invalid={!!errs.country} aria-describedby={errs.country ? "q-country-err" : undefined} />{errs.country && <span className="f-err" id="q-country-err">{errs.country}</span>}</div>
+          <div className={`f full${errs.product ? " bad" : ""}`}><label htmlFor="q-product">Product <b className="req" aria-hidden="true">*</b></label><select id="q-product" value={f.product} onChange={set("product")} required aria-invalid={!!errs.product} aria-describedby={errs.product ? "q-product-err" : undefined}>
+              <option value="" disabled>Choose a product…</option>
               {FORM_PRODUCTS.map((p, i) => <option key={p} value={i}>{p}</option>)}
-            </select></div>
-          <div className="f"><label htmlFor="q-volume">Volume</label><input id="q-volume" value={f.volume} onChange={set("volume")} placeholder="e.g. 25 MT or 1 x 40ft" required /></div>
-          <div className="f"><label htmlFor="q-port">Destination port</label><input id="q-port" value={f.port} onChange={set("port")} placeholder="e.g. Jebel Ali, Qingdao" required /></div>
+            </select>{errs.product && <span className="f-err" id="q-product-err">{errs.product}</span>}</div>
+          <div className={`f${errs.volume ? " bad" : ""}`}><label htmlFor="q-volume">Volume <b className="req" aria-hidden="true">*</b></label><input id="q-volume" value={f.volume} onChange={set("volume")} placeholder="e.g. 25 MT or 1 x 40ft" required aria-invalid={!!errs.volume} aria-describedby={errs.volume ? "q-volume-err" : undefined} />{errs.volume && <span className="f-err" id="q-volume-err">{errs.volume}</span>}</div>
+          <div className={`f${errs.port ? " bad" : ""}`}><label htmlFor="q-port">Destination port <b className="req" aria-hidden="true">*</b></label><input id="q-port" value={f.port} onChange={set("port")} placeholder="e.g. Jebel Ali, Qingdao" required aria-invalid={!!errs.port} aria-describedby={errs.port ? "q-port-err" : undefined} />{errs.port && <span className="f-err" id="q-port-err">{errs.port}</span>}</div>
           <div className="hp" aria-hidden="true"><label htmlFor="q-website">Website</label><input id="q-website" tabIndex={-1} autoComplete="off" value={f.website} onChange={set("website")} /></div>
-          <div className="f full"><label htmlFor="q-req">Requirement</label><textarea id="q-req" value={f.req} onChange={set("req")} placeholder="Grade / size, packing and anything else we should know" /></div>
-          {err && <p className="form-err">{err}</p>}
+          <div className={`f full${errs.req ? " bad" : ""}`}><label htmlFor="q-req">Requirement <span className="opt">(optional)</span></label><textarea id="q-req" value={f.req} onChange={set("req")} placeholder="Grade or size, packing, shipment month, and anything else we should know" />{errs.req && <span className="f-err" id="q-req-err">{errs.req}</span>}</div>
+          {TURNSTILE_SITE_KEY && <div className="f full ts" ref={ts} />}
+          {Object.values(errs).some(Boolean) && <p className="form-err" role="alert">Please fill in the highlighted fields.</p>}
+          {srvErr && <p className="form-err" role="alert">{srvErr}</p>}
           <div className="form-foot">
-            <Magnetic as="button" className="btn btn-ember" type="submit">Send Inquiry <Arrow /></Magnetic>
-            <span className="hint">Prepares your inquiry for WhatsApp or email.</span>
+            <Magnetic as="button" className="btn btn-ember" type="submit" disabled={sending}>{sending ? "Sending…" : "Send Inquiry"} <Arrow /></Magnetic>
+            <span className="hint">We reply by email. You can also send it on WhatsApp.</span>
           </div>
           <AnimatePresence>
             {msg && (
@@ -492,9 +480,9 @@ export function Footer() {
         <div className="horizon" aria-hidden="true"><span className="boat"><ShipIcon /></span></div>
         <div className="foot-top">
           <div><a className="brand" href="#top"><img src="img/sithara-exports-logo.svg" alt="" />Sithara Exports</a><p>Three generations. One family. One standard.<br />Seafood exporter since 1967.</p></div>
-          <div><b>Company</b><a href="#about">About</a><a href="#heritage">Heritage</a><a href="#testimonials">Testimonials</a></div>
+          <div><b>Company</b><a href="#about">About</a><a href="#heritage">Heritage</a><a href="#process">How we work</a></div>
           <div><b>Seafood</b><a href="#products">Shrimps</a><a href="#products">Cuttlefish &amp; Squid</a><a href="#products">Live Mud Crabs</a></div>
-          <div><b>Contact</b><span>{EMAIL}</span><a href={wa()} target="_blank" rel="noopener">{PHONE_DISPLAY}</a><span>Chandiroor · Cochin · Kerala</span></div>
+          <div><b>Contact</b><a href={`mailto:${EMAIL}`}>{EMAIL}</a><a href={`tel:+${PHONE}`}>{PHONE_DISPLAY}</a><a href={wa()} target="_blank" rel="noopener">WhatsApp</a><span>Chandiroor · Cochin · Kerala</span></div>
         </div>
         <div className="foot-base"><span>Copyright © {new Date().getFullYear()} Sithara Exports. All rights reserved.</span><span>Three generations · Since 1967</span></div>
       </div>

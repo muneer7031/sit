@@ -716,3 +716,41 @@ body.pl-lock { overflow: hidden; }
 /* Quote form: hidden bot trap, and the "received" note */
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .ready-note { margin: 0.35rem 0 0.8rem; color: var(--ash); font-size: 0.9rem; }
+
+/* ---------- Product popup on phones: scrolls inside, ‹ 1/8 › always reachable ---------- */
+.sheet-panel { max-height: calc(100dvh - 12px - env(safe-area-inset-top, 0px)); -webkit-overflow-scrolling: touch; }
+@media (max-width: 899px) {
+  .sheet-media { height: min(56vw, 30dvh); }
+  .sheet-body { padding-bottom: 0; }
+  .sheet-nav { position: sticky; bottom: 0; z-index: 2; justify-content: center; margin: 0 calc(-1 * clamp(1.6rem, 4vw, 3rem)); padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom, 0px)); background: var(--white); border-top: 1px solid var(--line); }
+}
+
+/* ---------- Map lanes beyond the edges ---------- */
+.map text.far-t { fill: #F2E8D0; fill-opacity: 0.75; }
+.map .dim { opacity: 0.15; transition: opacity 300ms; }
+
+/* ---------- Contact links ---------- */
+.contact .lines a, footer .foot-top a[href^="mailto"], footer .foot-top a[href^="tel"] { color: inherit; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3); text-underline-offset: 3px; }
+.contact .lines a:hover { text-decoration-color: currentColor; }
+
+/* ---------- Inquiry form: required markers and per-field errors ---------- */
+.req-note { grid-column: 1 / -1; margin: 0; color: var(--ash); font-size: 0.82rem; }
+.req { color: #FF9B74; font-weight: 600; }
+.opt { color: var(--ash); opacity: 0.7; font-size: 0.75rem; }
+.f.bad input, .f.bad select, .f.bad textarea { border-color: #FF7A59; box-shadow: 0 0 0 3px rgba(255,122,89,0.18); }
+.f-err { display: block; margin-top: 0.35rem; color: #FF9B74; font-size: 0.82rem; }
+.f select:invalid { color: var(--ash); }
+.f select option { color: initial; }
+.ts { min-height: 66px; }
+.btn[disabled] { opacity: 0.7; pointer-events: none; }
+
+/* ---------- Phone menu ---------- */
+.menu-btn { display: none; flex: none; width: 40px; height: 40px; border-radius: 50%; border: 0; cursor: pointer; color: inherit; background: rgba(127,127,127,0.14); box-shadow: inset 0 0 0 1px rgba(127,127,127,0.22); place-items: center; }
+@media (max-width: 900px) { .lnav .menu-btn { display: grid; } }
+.pmenu { position: fixed; inset: 0; z-index: 120; background: var(--white); color: var(--ink); display: flex; flex-direction: column; padding: calc(env(safe-area-inset-top, 0px) + 12px) 20px calc(env(safe-area-inset-bottom, 0px) + 20px); overflow-y: auto; }
+.pmenu-top { display: flex; align-items: center; justify-content: space-between; height: 52px; }
+.pmenu .menu-btn { display: grid; }
+.pmenu nav { display: flex; flex-direction: column; margin-top: 1.5rem; }
+.pmenu nav a { padding: 0.9rem 0; font-size: 1.6rem; font-weight: 600; letter-spacing: -0.03em; color: inherit; border-bottom: 1px solid var(--line); }
+.pmenu-foot { margin-top: auto; padding-top: 1.5rem; display: flex; align-items: center; gap: 0.8rem; }
+.pmenu-foot .btn { flex: 1; justify-content: center; }

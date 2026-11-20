@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { EASE } from "../motion.jsx";
 
@@ -24,6 +25,53 @@ function ThemeToggle() {
           : <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z" />}
       </motion.svg>
     </button>
+  );
+}
+
+const LINKS = [["#about", "About"], ["#products", "Products"], ["#routes", "Where we ship"], ["#heritage", "Heritage"], ["#process", "How we work"], ["#faq", "FAQ"], ["#contact", "Contact"]];
+
+/* Phone menu: a button in the header opens a full-screen list of the sections */
+function PhoneMenu() {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    window.__sxLenis?.stop(); document.body.style.overflow = "hidden";
+    const esc = (e) => e.key === "Escape" && setOpen(false);
+    addEventListener("keydown", esc);
+    return () => { window.__sxLenis?.start(); document.body.style.overflow = ""; removeEventListener("keydown", esc); };
+  }, [open]);
+  const go = (href) => (e) => {
+    e.preventDefault(); setOpen(false);
+    setTimeout(() => { const t = document.querySelector(href); if (!t) return; if (window.__sxLenis) window.__sxLenis.scrollTo(t, { duration: 1.1 }); else t.scrollIntoView({ behavior: "smooth" }); }, 60);
+  };
+  return (
+    <>
+      <button type="button" className="menu-btn" aria-label="Open menu" aria-expanded={open} onClick={() => setOpen(true)}>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+      </button>
+      {typeof document !== "undefined" && createPortal(<AnimatePresence>
+        {open && (
+          <motion.div className="pmenu" role="dialog" aria-modal="true" aria-label="Menu" data-lenis-prevent
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+            <div className="pmenu-top">
+              <span className="brand"><img src="img/sithara-exports-logo.svg" alt="" />Sithara Exports</span>
+              <button type="button" className="menu-btn" aria-label="Close menu" onClick={() => setOpen(false)} autoFocus>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+              </button>
+            </div>
+            <nav aria-label="Sections">
+              {LINKS.map(([h, l], i) => (
+                <motion.a key={h} href={h} onClick={go(h)} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE, delay: 0.04 * i }}>{l}</motion.a>
+              ))}
+            </nav>
+            <div className="pmenu-foot">
+              <ThemeToggle />
+              <a className="btn btn-ember" href="#contact" onClick={go("#contact")}>Request a Quote</a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>, document.body)}
+    </>
   );
 }
 
@@ -64,8 +112,8 @@ export default function Nav({ ready }) {
           <a href="#products">Products</a>
           <a href="#heritage">Heritage</a>
           <a href="#process">Process</a>
-          <a href="#specs">Specs</a>
           <a href="#faq">FAQ</a>
+          <PhoneMenu />
           <span className="nav-swap">
             <AnimatePresence mode="popLayout" initial={false}>
               {heroCta

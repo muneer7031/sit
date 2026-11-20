@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
-import { ALSO, SPECS, wa } from "../data.js";
+import { ALSO, wa } from "../data.js";
 import { useSite } from "../site.jsx";
 import { EASE, Reveal, ScrollWords, useParallax } from "../motion.jsx";
 
 /* ---------------- About statement ---------------- */
 const FEATURES = [
   ["Sourcing agent", "Reliable shippers and packers, matched to your requirement.", <><circle cx="9" cy="8" r="3.2" /><circle cx="17" cy="9.5" r="2.6" /><path d="M3 19c.6-3.2 3-5 6-5s5.4 1.8 6 5M14.5 14.6c2.6-.4 5.6.9 6.5 4.4" /></>],
-  ["Buyer-specific packing", "Packed as per your packing requirements, every order.", <><path d="M3 7l9-4 9 4v10l-9 4-9-4z" /><path d="M3 7l9 4 9-4M12 11v10" /></>],
+  ["Buyer-specific packing", "Your carton, your brand, your pack size.", <><path d="M3 7l9-4 9 4v10l-9 4-9-4z" /><path d="M3 7l9 4 9-4M12 11v10" /></>],
   ["Global inquiries", "We welcome export inquiries and orders from all over the world.", <><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" /></>],
 ];
 
@@ -165,7 +165,7 @@ export function ProductSheet({ index, onClose, onNav, onQuote }) {
     <motion.div className="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-title" onKeyDown={onKey}
       initial={{ opacity: 1 }} exit={{ opacity: 1 }}>
       <motion.div className="sheet-scrim" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} />
-      <motion.div className="sheet-panel" ref={panel}
+      <motion.div className="sheet-panel" ref={panel} data-lenis-prevent
         initial={{ y: 90, opacity: 0, scale: 0.97 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 60, opacity: 0, transition: { duration: 0.25 } }}
         transition={{ type: "spring", stiffness: 260, damping: 28 }}>
         <button className="sheet-x" ref={closeBtn} type="button" onClick={onClose} aria-label="Close product details">
@@ -187,7 +187,7 @@ export function ProductSheet({ index, onClose, onNav, onQuote }) {
             <dl className="sheet-specs" key="s">
               <div><dt>Form</dt><dd>{p.form}</dd></div>
               <div><dt>Grading</dt><dd>{p.grade}</dd></div>
-              <div><dt>Packing</dt><dd>To your specification and brand needs</dd></div>
+              <div><dt>Packing</dt><dd>Your carton, brand and pack size</dd></div>
               <div><dt>Ships from</dt><dd>Cochin, Kerala, India</dd></div>
             </dl>,
             <div className="sheet-actions" key="a">
@@ -205,28 +205,5 @@ export function ProductSheet({ index, onClose, onNav, onQuote }) {
         </motion.div>
       </motion.div>
     </motion.div>
-  );
-}
-
-/* ---------------- Specification ---------------- */
-export function Specs() {
-  return (
-    <section className="specs-s" id="specs" aria-labelledby="specs-title">
-      <div className="wrap">
-        <div className="specs-head">
-          <div>
-            <p className="eyebrow">Specification</p>
-            <Reveal as="h2" id="specs-title" className="h-lg" style={{ marginTop: "1.2rem" }}>Your order, <em className="s">your specification.</em></Reveal>
-          </div>
-          <Reveal as="p" className="lead" delay={0.08}>Every order is packed to the buyer’s own requirements. Send us these details and we’ll reply with availability.</Reveal>
-        </div>
-        <div className="spec-grid">
-          {SPECS.map(([k, h, p], i) => (
-            <Reveal className="spec" key={k} delay={(i % 3) * 0.08}><span className="k">{k}</span><h3>{h}</h3><p>{p}</p></Reveal>
-          ))}
-        </div>
-        <Reveal as="p" className="specs-cta"><a href="#contact">Have your specification ready? Request a quote ›</a></Reveal>
-      </div>
-    </section>
   );
 }

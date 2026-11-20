@@ -4,23 +4,23 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { GALLERY, PRODUCTS } from "./data.js";
 
-const Ctx = createContext({ products: PRODUCTS, gallery: GALLERY });
+const Ctx = createContext({ products: PRODUCTS, gallery: GALLERY, testimonials: [] });
 // Photos published from the online dashboard (Supabase public storage)
 const SUPABASE = "https://ocdfjuvesnkimqiexqyw.supabase.co";
 const ONLINE = `${SUPABASE}/storage/v1/object/public/public-media/manifest.json`;
-// Public (publishable) key: the database only lets the website ADD an enquiry, never read one.
+// Public (publishable) key. The website can't read or write enquiries directly; it goes through submit-enquiry.
 const PUBLIC_KEY = "sb_publishable_2jjbikbzWBwyFW_WAmmy0w_0TezcshU";
 
-/* Save a quote request to the Sithara dashboard ("Website enquiries"). Resolves true when saved. */
-export async function saveEnquiry(e) {
+// Cloudflare Turnstile site key (public). Leave empty until Turnstile is set up; the other bot checks still run.
+export const TURNSTILE_SITE_KEY = "";
+
+/* Send a quote request through the bot-checking function. Resolves { ok, error? }. */
+export async function submitEnquiry(e) {
   try {
-    const r = await fetch(`${SUPABASE}/rest/v1/enquiries`, {
-      method: "POST",
-      headers: { apikey: PUBLIC_KEY, Authorization: `Bearer ${PUBLIC_KEY}`, "Content-Type": "application/json", Prefer: "return=minimal" },
-      body: JSON.stringify({ name: e.name.slice(0, 120), company: e.company.slice(0, 160) || null, email: e.email.slice(0, 200), country: e.country.slice(0, 80), product: e.product.slice(0, 120), requirement: e.requirement.slice(0, 3000) || null, source: "website" }),
-    });
-    return r.ok;
-  } catch { return false; }
+    const r = await fetch(`${SUPABASE}/functions/v1/submit-enquiry`, { method: "POST", headers: { "Content-Type": "application/json", apikey: PUBLIC_KEY }, body: JSON.stringify(e) });
+    const j = await r.json().catch(() => ({}));
+    return r.ok ? { ok: true } : { ok: false, error: j.error || "" };
+  } catch { return { ok: false, error: "" }; }
 }
 const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z]/g, "");
 const formOption = (name) => { const n = norm(name); return /shrimp|prawn|vannamei|tiger|scampi|poovalan/.test(n) ? 0 : /squid|cuttle|octopus/.test(n) ? 1 : /crab/.test(n) ? 3 : 2; };
@@ -51,7 +51,13 @@ export function SiteMediaProvider({ children }) {
       if (ms.length) setManifest({ products: ms.flatMap((m) => m.products || []), gallery: ms.flatMap((m) => m.gallery || []) });
     });
   }, []);
-  const value = useMemo(() => merge(manifest), [manifest]);
+  // Testimonials switched on in the dashboard (Testimonials page → public-media/testimonials.json)
+  const [testimonials, setTestimonials] = useState([]);
+  useEffect(() => {
+    fetch(`${SUPABASE}/storage/v1/object/public/public-media/testimonials.json`, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((d) => setTestimonials(Array.isArray(d?.items) ? d.items.filter((t) => t && t.quote && (t.company || t.name)) : []));
+  }, []);
+  const value = useMemo(() => ({ ...merge(manifest), testimonials }), [manifest, testimonials]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

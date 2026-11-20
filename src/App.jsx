@@ -4,8 +4,8 @@ import Lenis from "lenis";
 import Preloader from "./components/Preloader.jsx";
 import Nav from "./components/Nav.jsx";
 import Hero from "./components/Hero.jsx";
-import { ProductSheet, Products, Specs, Statement } from "./components/Sections1.jsx";
-import { Contact, Faq, Footer, Gallery, Heritage, Note, Process, Routes, Values, Voices, WaFab } from "./components/Sections2.jsx";
+import { ProductSheet, Products, Statement } from "./components/Sections1.jsx";
+import { Contact, Faq, Footer, Gallery, Heritage, Note, Process, Routes, Voices, WaFab } from "./components/Sections2.jsx";
 import { SiteMediaProvider, useSite } from "./site.jsx";
 import { track } from "./analytics.js";
 import { ScrollProgress } from "./motion.jsx";
@@ -82,10 +82,8 @@ function Site() {
         <Hero ready={ready} />
         <Statement />
         <Products onOpen={openSheet} />
-        <Specs />
         <Routes />
         <Heritage />
-        <Values />
         <Note />
         <Process />
         <Gallery />

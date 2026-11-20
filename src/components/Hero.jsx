@@ -120,7 +120,7 @@ export default function Hero({ ready }) {
           <motion.dl className="ship-strip" aria-label="Shipment details" {...fade(3)}>
             <div><dt>Port of loading</dt><dd>Cochin, India</dd></div>
             <div><dt>Cargo</dt><dd>Fresh · Frozen · Live · Dried</dd></div>
-            <div><dt>Packing</dt><dd>To buyer’s specification</dd></div>
+            <div><dt>Packing</dt><dd>Your carton &amp; brand</dd></div>
             <div><dt>Status</dt><dd className="live">Accepting inquiries</dd></div>
           </motion.dl>
         </div>

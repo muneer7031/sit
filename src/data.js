@@ -13,30 +13,21 @@ export const FORM_PRODUCTS = [
 ];
 
 export const PRODUCTS = [
-  { n: "Shrimps", alt: "Frozen shrimp", tag: "Frozen", desc: "Frozen shrimp, packed to order.", form: "Frozen", grade: "By size, to your requirement", opt: 0 },
+  { n: "Shrimps", alt: "Frozen shrimp", tag: "Frozen", desc: "Frozen shrimp, graded by count.", form: "Frozen", grade: "By size, to your requirement", opt: 0 },
   { n: "Cuttlefish", alt: "Frozen cuttlefish", tag: "Frozen", desc: "Frozen cuttlefish.", form: "Frozen", grade: "By size, to your requirement", opt: 1 },
   { n: "Squid", alt: "Frozen squid", tag: "Frozen", desc: "Frozen squid.", form: "Frozen", grade: "By size, to your requirement", opt: 1 },
   { n: "Indian Mackerel", alt: "Indian mackerel", tag: "Frozen", desc: "Frozen, graded by size.", form: "Frozen", grade: "Graded by size", opt: 2 },
-  { n: "Ribbon Fish", alt: "Frozen ribbon fish", tag: "Frozen", desc: "Frozen, packed to order.", form: "Frozen", grade: "By size, to your requirement", opt: 2 },
+  { n: "Ribbon Fish", alt: "Frozen ribbon fish", tag: "Frozen", desc: "Frozen, graded by size.", form: "Frozen", grade: "By size, to your requirement", opt: 2 },
   { n: "Mahi-Mahi", alt: "Mahi-mahi", tag: "Seafood", desc: "Mahi-mahi (dolphinfish).", form: "Fresh", grade: "By size, to your requirement", opt: 2 },
-  { n: "Live Mud Crabs", alt: "Live mud crab", tag: "Live", desc: "Live, packed to your requirement.", form: "Live", grade: "By size, to your requirement", opt: 3 },
+  { n: "Live Mud Crabs", alt: "Live mud crab", tag: "Live", desc: "Live, graded by weight.", form: "Live", grade: "By size, to your requirement", opt: 3 },
   { n: "Sardine", alt: "Frozen sardines", tag: "Frozen", desc: "Boxed, frozen.", form: "Frozen, boxed", grade: "By size, to your requirement", opt: 2 },
 ];
 
 export const ALSO = [
-  ["Dried Seafood", "Shark cartilage, stingray skin, fins, chitin and chitosan."],
+  ["Dried Seafood", "Shark cartilage, chitin and chitosan."],
   ["Meat", "Indian buffalo meat, supplied through partner exporters."],
   ["Coconut & Cassava", "Husked coconut, frozen shredded coconut, ready-to-cook tapioca."],
   ["Spices & Veg", "Whole and curry-powder spices, frozen Indian vegetables."],
-];
-
-export const SPECS = [
-  ["Product & form", "Fresh, frozen, live or dried", "Tell us the species and the form you need. We source more than 20 seafood varieties."],
-  ["Size & grade", "Graded to your requirement", "Seafood is graded by size, to the grade you specify."],
-  ["Packing", "Packed your way", "Packed according to your packing requirements, every order."],
-  ["Branding", "Your brand needs", "Packed according to your specification and brand needs."],
-  ["Volume", "The quantity you need", "Tell us the volume, and we’ll come back with availability."],
-  ["Destination", "Dispatched from Cochin", "Shipped to your port across the Middle East, Asia, Europe and beyond."],
 ];
 
 /* Equirectangular projection for the lanes map: lon -15..150, lat 65..-15 */
@@ -61,19 +52,10 @@ export const DEST = [
   { r: "as", n: "Singapore", lon: 103.8, lat: 1.3, dx: 9, dy: 4, a: "start" },
   { r: "as", n: "Indonesia", lon: 106.8, lat: -6.2, dx: 9, dy: 6, a: "start" },
 ];
-export const FAR = [[14, 296], [632, 300]];
-
-export const VALUES = [
-  { k: "The first principle", h: "Disciplined", p: "Our grandfather and our father both ran the business with discipline. We hold ourselves to the same standard.", cls: "wide navy" },
-  { k: "Buyers first", h: "Customer focused", p: "Buyers have always come first. We measure every shipment by your satisfaction." },
-  { k: "Straightforward", h: "Easy to work with", p: "Suppliers and buyers have always found us straightforward and easy to work with. We intend to keep that reputation." },
-  { photo: "img/cleaned-frozen-shrimp.webp", h: "Packed your way", p: "Every order is packed according to the buyer’s own packing requirements.", cls: "photo" },
-  { k: "Home", h: "Rooted in Chandiroor", p: "The family has worked in Chandiroor, beside Aroor, the seafood city of Cochin, since 1967." },
-  { k: "Reach", h: "Worldwide reach", p: "From the Middle East and Asia to parts of Europe, we ship to buyers across the world." },
-  { k: "Ownership", h: "Family owned", p: "Three generations of the same family, with the same name on every shipment." },
-  { k: "Range", h: "Beyond seafood", p: "From shrimp and fish to meat, coconut, spices and vegetables, our range has grown with each generation." },
-  { k: "Experience", h: "The people behind the work", p: "Some of the people who work with us have been with the family for many years. Their experience is part of every shipment we send.", cls: "wide" },
-  { k: "The name", h: "Always aspiring", p: "Sithara means aspiring star. We keep aiming higher, shipment after shipment." },
+export const FAR = [
+  { n: "AFRICA", x: 214, y: 268, tx: 214, ty: 288, a: "middle" },
+  { n: "AMERICAS", x: 2, y: 196, tx: 8, ty: 212, a: "start" },
+  { n: "AUSTRALIA", x: 600, y: 306, tx: 632, ty: 296, a: "end" },
 ];
 
 export const GENERATIONS = [
@@ -85,35 +67,21 @@ export const GENERATIONS = [
     p: "Muzammil, the third generation, steps forward with a modern approach and the same values: discipline, customer focus and being easy to work with." },
 ];
 
-export const CHAPTERS = [
-  { ct: "1967", h: "From real estate to the sea", p: "Before 1967, our grandfather worked in real estate. He then began exporting shrimp from Chandiroor, where Sithara Exports is still based today." },
-  { ct: "Chandiroor", h: "A processing plant close to home", p: "As the business did well, our grandfather built a seafood processing plant in Chandiroor, near the family home, with freezing and cold storage facilities, and processed seafood there himself. Chandiroor remains our base, close to Aroor, the seafood city of Cochin." },
-  { ct: "1996", h: "A sourcing agent, and beyond seafood", p: "When our father took over, Sithara became a sourcing agent, connecting buyers with reliable processors and packers. He also explored beyond seafood: today the range also covers meat, coconut, spices and Indian agro products." },
-  { ct: "Worldwide", h: "Shipping across the world", p: "Over the decades we have shipped to buyers in almost every part of the world, especially the Middle East and Asia, and to parts of Europe.", chips: ["Middle East", "Asia", "Europe", "And beyond"] },
-];
-
 export const STEPS = [
-  ["Inquiry", "Tell us the product, grade, volume and destination."],
+  ["Inquiry", "Send the product, grade or size, packing, volume and destination port."],
   ["Sourcing", "We match your order with reliable processors, shippers and packers."],
-  ["Packing", "Packed according to your specification and brand needs."],
+  ["Packing", "Checked and packed in your carton and brand before loading."],
   ["Shipment", "Dispatched from Cochin to importers around the world."],
 ];
 
 // Gallery photos come from the Sithara dashboard ("Gallery photos" → Publish to website).
 export const GALLERY = [];
 
-export const QUOTES = [
-  ["The seafood quality and freshness have been excellent. Their attention to product standards, careful handling and consistency make them a reliable export partner. We are very satisfied with the overall experience.", "Sathar", "Buyer · UAE"],
-  ["Working with the team has been a positive experience. They are responsive, transparent and committed to delivering quality products. Their reliability and personal approach make business easy.", "David", "Buyer · Netherlands"],
-  ["What stands out is their commitment to quality and professionalism. The packaging is handled carefully, communication is smooth, and shipments are coordinated efficiently. A dependable partner for seafood exports.", "Saji", "Buyer · South Korea"],
-];
-
 export const FAQ = [
   ["Where is Sithara Exports based?", "We are based in Chandiroor, near Aroor, the seafood hub of Cochin (Kochi), Kerala, India, where the family has been in the seafood trade since 1967."],
   ["Which products do you export?", "Fresh, frozen, live and dried seafood, including shrimp, cuttlefish, squid, mackerel, ribbon fish, mahi-mahi, sardine and live mud crabs. We source more than 20 seafood varieties, and we also supply meat, coconut, spices and vegetables."],
   ["Do you process the seafood yourselves?", "Our founder, Mohammed, processed seafood at his own plant in Chandiroor. Since 1996 we have worked as a sourcing agent: we match your order with reliable processors, shippers and packers around Aroor and see it packed to your specification."],
-  ["Can you pack to my specification?", "Yes. Orders are packed according to the buyer’s packing requirements."],
-  ["Which countries do you ship to?", "We ship to buyers in almost every part of the world, especially the Middle East and Asia, and to parts of Europe."],
+  ["Which countries do you ship to?", "We ship to buyers in every part of the world, most often in the Middle East, Asia and Europe."],
   ["How do I request a quote?", "Send us the product, grade, quantity and destination through the form on this page or on WhatsApp, and we will reply with details and availability."],
   ["How long have you been in business?", "Since 1967. Sithara Exports is now in its third generation of family ownership."],
 ];

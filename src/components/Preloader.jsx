@@ -131,7 +131,7 @@ export default function Preloader({ onReveal, onDone, quick = false }) {
           </g>
         </svg>
         <div className="pl-cap" style={{ opacity: 0 }}>
-          <span><b>01</b>Packed to your specification</span>
+          <span><b>01</b>Graded and packed in Cochin</span>
           <span><b>02</b>Sealed and labelled</span>
           <span><b>03</b>On its way to your port</span>
         </div>
