@@ -14,13 +14,12 @@ const org = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": SITE_URL + "#org",
-  name: "Sithara Exports",
+  name: "Zetarah Exports",
+  alternateName: "Sithara Exports",
   url: SITE_URL,
-  logo: SITE_URL + "img/sithara-exports-logo.svg",
+  logo: SITE_URL + "img/zetarah-exports-logo.svg",
   image: SITE_URL + "img/og.jpg",
-  description: "Family-owned seafood exporter in Cochin (Kochi), Kerala, India, supplying fresh, frozen, live and dried seafood to importers worldwide, packed to the buyer's specification, since 1967.",
-  foundingDate: "1967",
-  founder: { "@type": "Person", name: "Mohammed" },
+  description: "Family seafood exporter in Cochin (Kochi), Kerala, India: the third generation of the family behind Sithara Exports (est. 1967). Fresh, frozen, live and dried seafood for importers worldwide, packed to the buyer's specification.",
   email: EMAIL,
   telephone: "+919895527211",
   address: { "@type": "PostalAddress", streetAddress: "Chandiroor, near Aroor", addressLocality: "Cochin", addressRegion: "Kerala", addressCountry: "IN" },
@@ -33,7 +32,7 @@ const org = {
     itemListElement: [...PRODUCTS.map((p) => p.n), ...ALSO.map((a) => a[0])].map((n) => ({ "@type": "Offer", itemOffered: { "@type": "Product", name: n } })),
   },
 };
-const site = { "@context": "https://schema.org", "@type": "WebSite", name: "Sithara Exports", url: SITE_URL, publisher: { "@id": SITE_URL + "#org" } };
+const site = { "@context": "https://schema.org", "@type": "WebSite", name: "Zetarah Exports", url: SITE_URL, publisher: { "@id": SITE_URL + "#org" } };
 const faq = {
   "@context": "https://schema.org",
   "@type": "FAQPage",

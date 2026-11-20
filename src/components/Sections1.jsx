@@ -193,7 +193,7 @@ export function ProductSheet({ index, onClose, onNav, onQuote }) {
             </dl>,
             <div className="sheet-actions" key="a">
               <motion.button className="btn btn-accent" type="button" onClick={() => onQuote(p)} whileTap={{ scale: 0.96 }}>Request a quote</motion.button>
-              <motion.a className="btn sheet-wa" href={wa(`Hello Sithara Exports, I'd like a quote for ${p.n}.`)} target="_blank" rel="noopener" whileTap={{ scale: 0.96 }}>Ask on WhatsApp</motion.a>
+              <motion.a className="btn sheet-wa" href={wa(`Hello Zetarah Exports, I'd like a quote for ${p.n}.`)} target="_blank" rel="noopener" whileTap={{ scale: 0.96 }}>Ask on WhatsApp</motion.a>
             </div>,
           ].map((el) => (
             <motion.div key={el.key} variants={{ h: { opacity: 0, y: 10 }, s: { opacity: 1, y: 0 } }} transition={{ duration: 0.4, ease: EASE }}>{el}</motion.div>

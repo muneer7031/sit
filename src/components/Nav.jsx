@@ -54,7 +54,7 @@ function PhoneMenu() {
           <motion.div className="pmenu" role="dialog" aria-modal="true" aria-label="Menu" data-lenis-prevent
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
             <div className="pmenu-top">
-              <span className="brand"><img src="img/sithara-exports-logo.svg" alt="" />Sithara Exports</span>
+              <span className="brand"><img src="img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</span>
               <button type="button" className="menu-btn" aria-label="Close menu" onClick={() => setOpen(false)} autoFocus>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
               </button>
@@ -106,7 +106,7 @@ export default function Nav({ ready }) {
     <motion.header className={`lnav${state.scrolled ? " scrolled" : ""}${state.dark ? " on-dark" : ""}`}
       initial={{ y: -24, opacity: 0 }} animate={ready ? { y: 0, opacity: 1 } : undefined} transition={{ duration: 1.2, ease: EASE, delay: 0.5 }}>
       <div className="wrap">
-        <a className="brand" href="#top"><img src="img/sithara-exports-logo.svg" alt="" />Sithara Exports</a>
+        <a className="brand" href="#top"><img src="img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</a>
         <nav aria-label="Sections">
           <a href="#about">About</a>
           <a href="#products">Products</a>

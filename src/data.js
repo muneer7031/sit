@@ -63,7 +63,7 @@ export const GENERATIONS = [
     p: "Our grandfather, Mohammed, worked in real estate before he founded Sithara Exports and began exporting shrimp. When the business did well, he built a seafood processing plant with freezing and cold storage facilities near the family home, and processed seafood there himself." },
   { img: "img/shaji-second-generation-of-sithara-expor.webp", alt: "Shaji, second generation of Sithara Exports", years: ["1996 ", "onwards", ""], who: "Shaji · Second generation", h: "The next chapter", rev: true,
     p: "Our father, Shaji, took the business forward as a sourcing agent, matching buyers with reliable processors, shippers and packers. He also explored beyond seafood, as Sithara reached buyers across the Middle East, Asia and parts of Europe." },
-  { img: "img/muzammil-third-generation-of-sithara-exp.webp", alt: "Muzammil, third generation of Sithara Exports", years: ["", "Today", ""], who: "Muzammil · Third generation", h: "Carrying the legacy ahead",
+  { img: "img/muzammil-third-generation-of-sithara-exp.webp", alt: "Muzammil, third generation of the family, Zetarah Exports", years: ["", "Today", ""], who: "Muzammil · Third generation · Zetarah Exports", h: "Carrying the legacy ahead",
     p: "Muzammil, the third generation, steps forward with a modern approach and the same values: discipline, customer focus and being easy to work with." },
 ];
 
@@ -74,14 +74,14 @@ export const STEPS = [
   ["Shipment", "Dispatched from Cochin to importers around the world."],
 ];
 
-// Gallery photos come from the Sithara dashboard ("Gallery photos" → Publish to website).
+// Gallery photos come from the dashboard ("Gallery photos" → Publish to website).
 export const GALLERY = [];
 
 export const FAQ = [
-  ["Where is Sithara Exports based?", "We are based in Chandiroor, near Aroor, the seafood hub of Cochin (Kochi), Kerala, India, where the family has been in the seafood trade since 1967."],
+  ["Where is Zetarah Exports based?", "We are based in Chandiroor, near Aroor, the seafood hub of Cochin (Kochi), Kerala, India, where the family has been in the seafood trade since 1967."],
   ["Which products do you export?", "Fresh, frozen, live and dried seafood, including shrimp, cuttlefish, squid, mackerel, ribbon fish, mahi-mahi, sardine and live mud crabs. We source more than 20 seafood varieties, and we also supply meat, coconut, spices and vegetables."],
   ["Do you process the seafood yourselves?", "Our founder, Mohammed, processed seafood at his own plant in Chandiroor. Since 1996 we have worked as a sourcing agent: we match your order with reliable processors, shippers and packers around Aroor and see it packed to your specification."],
   ["Which countries do you ship to?", "We ship to buyers in every part of the world, most often in the Middle East, Asia and Europe."],
   ["How do I request a quote?", "Send us the product, grade, quantity and destination through the form on this page or on WhatsApp, and we will reply with details and availability."],
-  ["How long have you been in business?", "Since 1967. Sithara Exports is now in its third generation of family ownership."],
+  ["How long have you been in business?", "Our family has been in the seafood trade since 1967, when our grandfather, Mohammed, founded Sithara Exports. Zetarah Exports is the third generation of that family business."],
 ];

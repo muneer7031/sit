@@ -109,7 +109,7 @@ export default function Hero({ ready }) {
                 transition={{ duration: 1.8, ease: "easeOut", delay: 0.45 }} />
             </div>
           </motion.div>
-          <motion.p className="eyebrow" {...fade(0)}>Est. 1967 · Chandiroor, Kerala</motion.p>
+          <motion.p className="eyebrow" {...fade(0)}>Family trade since 1967 · Chandiroor, Kerala</motion.p>
           <MaskLines as="h1" id="hero-title" play={on} delay={0.25}
             lines={["From the Kerala coast", <>to your <em className="s">cold chain.</em></>]} />
           <motion.p className="hero-sub" {...fade(1)}>Family-owned seafood exporter in Cochin (Kochi), supplying fresh, frozen, live and dried seafood to importers worldwide, packed to your specification.</motion.p>

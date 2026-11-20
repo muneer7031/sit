@@ -1,4 +1,4 @@
-// Photos published from the Sithara dashboard ("Photos & website" → Publish).
+// Photos published from the dashboard ("Photos & website" → Publish).
 // Online dashboard: read from Supabase public storage. Offline package: public/media/.
 // Product and gallery photos live only in the dashboard.
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -38,7 +38,7 @@ export function merge(manifest) {
     products.push({ n: m.name, img: m.image, alt: m.alt || m.name, tag: m.tag || "Frozen", desc: m.desc || "Packed to order.", form: m.form || m.tag || "Frozen", grade: m.grade || "By size, to your requirement", opt: formOption(m.name) });
   }
   // Layout classes g1–g6 repeat, so any number of photos keeps the mosaic shape
-  const gallery = (manifest.gallery || []).map((g, i) => [`g${(i % 6) + 1} gi-${i}`, g.image, g.alt || g.caption || "Sithara Exports seafood", g.caption || g.alt || ""]);
+  const gallery = (manifest.gallery || []).map((g, i) => [`g${(i % 6) + 1} gi-${i}`, g.image, g.alt || g.caption || "Zetarah Exports seafood", g.caption || g.alt || ""]);
   return { products, gallery };
 }
 

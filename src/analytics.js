@@ -26,7 +26,7 @@ export function initAnalytics() {
   }
 }
 
-// Sithara dashboard stats ("Website stats"): private, no cookies, no IP addresses.
+// Dashboard stats ("Website stats"): private, no cookies, no IP addresses.
 // A random id per browser tab visit links one visit's events together; the country is estimated
 // from the device time zone by the "track" function.
 const STATS_URL = "https://ocdfjuvesnkimqiexqyw.supabase.co/functions/v1/track";

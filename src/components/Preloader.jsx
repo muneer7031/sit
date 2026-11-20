@@ -5,7 +5,7 @@ import { EASE, EASE_IO } from "../motion.jsx";
 const FISH = "M-20 0 C-12 -9 8 -9 14 0 C8 9 -12 9 -20 0 Z M14 0 L25 -8 L23 0 L25 8 Z";
 const wave = (y) => { let d = `M-60 ${y}`; for (let i = 0; i < 46; i++) d += " q13 -6 26 0 t26 0"; return d; };
 
-/* Act 0: the Sithara seal spins in and flies into the brand mark.
+/* Act 0: the Zetarah seal spins in and flies into the brand mark.
    Acts 1–3: fish into the carton → lid and stamp → crane lifts it onto the ship → ship sails.
    Everything runs as one framer-motion sequence; carton / ship / hook move on motion values. */
 export default function Preloader({ onReveal, onDone, quick = false }) {
@@ -81,12 +81,12 @@ export default function Preloader({ onReveal, onDone, quick = false }) {
   }, []);
 
   return (
-    <div className="pl" ref={scope} role="status" aria-label="Loading Sithara Exports">
+    <div className="pl" ref={scope} role="status" aria-label="Loading Zetarah Exports">
       <div className="pl-glow" />
       <button className="pl-skip" type="button" onClick={exit}>Skip</button>
-      <div className="pl-seal" aria-hidden="true"><span className="halo" /><span className="ringline" /><img src="img/sithara-exports-logo.svg" alt="" /></div>
+      <div className="pl-seal" aria-hidden="true"><span className="halo" /><span className="ringline" /><img src="img/zetarah-exports-logo.svg" alt="" /></div>
       <div className="pl-in">
-        <div className="pl-brand" style={{ opacity: 0 }}><img id="pl-brand-img" src="img/sithara-exports-logo.svg" alt="" style={{ opacity: 0 }} /><div><b>Sithara Exports</b><span>Exporting seafood since 1967</span></div></div>
+        <div className="pl-brand" style={{ opacity: 0 }}><img id="pl-brand-img" src="img/zetarah-exports-logo.svg" alt="" style={{ opacity: 0 }} /><div><b>Zetarah Exports</b><span>Exporting seafood since 1967</span></div></div>
         <svg className="scene" viewBox="0 0 800 330" aria-hidden="true" style={{ opacity: 0 }}>
           <path id="pl-star" opacity="0" d="M700 30 C701.6 41 704 43.4 715 45 C704 46.6 701.6 49 700 60 C698.4 49 696 46.6 685 45 C696 43.4 698.4 41 700 30Z" fill="#F2E8D0" />
           <path className="stroke draw" d="M420 290 V96" />
@@ -107,7 +107,7 @@ export default function Preloader({ onReveal, onDone, quick = false }) {
               <path className="faint" d="M482 236 V261 M494 236 V261 M506 236 V261 M518 236 V261 M544 236 V261 M556 236 V261 M568 236 V261 M580 236 V261" />
             </g>
             <rect x="714" y="188" width="12" height="18" rx="1" fill="none" stroke="#EE7A42" strokeWidth="1.5" />
-            <text x="610" y="288" textAnchor="middle" fontFamily="Geist, sans-serif" fontSize="9" letterSpacing="3" fill="rgba(245,245,247,0.55)">SITHARA · COCHIN</text>
+            <text x="610" y="288" textAnchor="middle" fontFamily="Geist, sans-serif" fontSize="9" letterSpacing="3" fill="rgba(245,245,247,0.55)">ZETARAH · COCHIN</text>
           </g>
           <g className="wv"><path className="stroke faint" d={wave(306)} /></g>
           <g className="wv b"><path className="stroke faint" d={wave(320)} /></g>
@@ -124,7 +124,7 @@ export default function Preloader({ onReveal, onDone, quick = false }) {
             <rect x="0" y="0" width="120" height="70" rx="3" fill="#050607" stroke="#F5F5F7" strokeWidth="1.5" />
             <g id="pl-stamp" opacity="0">
               <rect x="22" y="19" width="76" height="32" rx="2" fill="none" stroke="#EE7A42" strokeWidth="1" />
-              <text x="60" y="33" textAnchor="middle" fontFamily="Geist, sans-serif" fontWeight="600" fontSize="8" letterSpacing="1.8" fill="#EE7A42">SITHARA</text>
+              <text x="60" y="33" textAnchor="middle" fontFamily="Geist, sans-serif" fontWeight="600" fontSize="8" letterSpacing="1.8" fill="#EE7A42">ZETARAH</text>
               <text x="60" y="44" textAnchor="middle" fontFamily="Geist, sans-serif" fontSize="5.6" letterSpacing="1.2" fill="#F2E8D0">EXPORT · COCHIN</text>
             </g>
             <rect id="pl-lid" opacity="0" x="-4" y="-11" width="128" height="11" rx="2" fill="#050607" stroke="#F5F5F7" strokeWidth="1.5" />

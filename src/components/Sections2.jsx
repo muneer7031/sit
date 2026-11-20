@@ -143,7 +143,7 @@ export function Heritage() {
         <p className="eyebrow">Our heritage</p>
         <MaskLines as="h2" id="heritage-title" className="h-xl" style={{ marginTop: "1.2rem" }}
           lines={["Three generations.", <em className="s" style={{ color: "var(--cream)" }}>One promise.</em>]} />
-        <Reveal as="p" className="lead" style={{ marginTop: "1.4rem" }}>Since 1967, Sithara Exports has been a family business, and every shipment carries that name.</Reveal>
+        <Reveal as="p" className="lead" style={{ marginTop: "1.4rem" }}>Our family has traded seafood from Chandiroor since 1967: first as Sithara Exports, and now as Zetarah Exports, its third generation.</Reveal>
         <div className="stats">
           <Stat i={0} to={1967} from={1900} label="The year Mohammed began exporting shrimp from Chandiroor" />
           <Stat i={1} to={3} label="Generations of one family, one name on every shipment" />
@@ -161,11 +161,11 @@ export function Heritage() {
         <Reveal className="namecard">
           <small>The name</small>
           <div className="big">
-            <motion.span id="sithara-word" aria-label="Sithara" initial="h" whileInView="s" viewport={VIEW} variants={{ s: { transition: { staggerChildren: 0.06 } } }}>
-              {[..."Sithara"].map((c, i) => <motion.span key={i} aria-hidden="true" variants={{ h: { y: "110%" }, s: { y: "0%" } }} transition={{ duration: 1.4, ease: EASE }}>{c}</motion.span>)}
-            </motion.span>{" "}<i>/ aspiring star</i>
+            <motion.span id="sithara-word" aria-label="Zetarah" initial="h" whileInView="s" viewport={VIEW} variants={{ s: { transition: { staggerChildren: 0.06 } } }}>
+              {[..."Zetarah"].map((c, i) => <motion.span key={i} aria-hidden="true" variants={{ h: { y: "110%" }, s: { y: "0%" } }} transition={{ duration: 1.4, ease: EASE }}>{c}</motion.span>)}
+            </motion.span>{" "}<i>/ Exports</i>
           </div>
-          <p>“Sithara” means aspiring star, a name we have carried for three generations.</p>
+          <p>Sithara Exports, founded by our grandfather in 1967, continues today as Zetarah Exports, the family’s third generation.</p>
         </Reveal>
 
       </div>
@@ -197,7 +197,7 @@ export function Note() {
             </motion.span>
           ))}
         </motion.blockquote>
-        <Reveal as="p" className="more" delay={0.3}>My grandfather, Mohammed, started Sithara Exports in 1967. In 1996 he handed it to my father, Shaji, and today it is my turn to carry it forward. Whether you have worked with us for years or are writing to us for the first time, I would be glad to hear from you personally.</Reveal>
+        <Reveal as="p" className="more" delay={0.3}>My grandfather, Mohammed, started Sithara Exports in 1967. In 1996 he handed it to my father, Shaji, and today I carry our family’s trade forward as Zetarah Exports. Whether you have worked with us for years or are writing to us for the first time, I would be glad to hear from you personally.</Reveal>
         <motion.div className="sig" initial="h" whileInView="s" viewport={{ once: true, margin: "0px 0px -6% 0px" }}>
           <span className="sig-photo">
             <motion.img src="img/muzammil-third-generation-of-sithara-exp.webp" alt="" variants={{ h: { scale: 0.8, opacity: 0 }, s: { scale: 1, opacity: 1 } }} transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.1 }} />
@@ -209,7 +209,7 @@ export function Note() {
           <div>
             <motion.span className="sig-hand" aria-label="Muzammil"
               variants={{ h: { clipPath: "inset(0 100% 0 0)" }, s: { clipPath: "inset(0 0% 0 0)" } }} transition={{ duration: 1.8, ease: [0.65, 0, 0.35, 1], delay: 0.45 }}>Muzammil</motion.span>
-            <motion.span className="sig-role" variants={{ h: { opacity: 0, y: 6 }, s: { opacity: 1, y: 0 } }} transition={{ duration: 0.8, delay: 1.5 }}>Third generation, Sithara Exports</motion.span>
+            <motion.span className="sig-role" variants={{ h: { opacity: 0, y: 6 }, s: { opacity: 1, y: 0 } }} transition={{ duration: 0.8, delay: 1.5 }}>Third generation · Zetarah Exports</motion.span>
           </div>
         </motion.div>
       </div>
@@ -402,7 +402,7 @@ export function Contact({ prefill }) {
     if (Object.keys(er).length) { document.getElementById("q-" + Object.keys(er)[0])?.focus(); setMsg(""); return; }
     const product = FORM_PRODUCTS[Number(f.product)];
     track("inquiry_prepared", product);
-    setMsg(`Inquiry for Sithara Exports\nName: ${f.name}${f.company.trim() ? "\nCompany: " + f.company : ""}\nEmail: ${f.email}\nCountry: ${f.country}\nProduct: ${product}\nVolume: ${f.volume.trim()}\nDestination port: ${f.port.trim()}${f.req.trim() ? "\nRequirement: " + f.req.trim() : ""}`);
+    setMsg(`Inquiry for Zetarah Exports\nName: ${f.name}${f.company.trim() ? "\nCompany: " + f.company : ""}\nEmail: ${f.email}\nCountry: ${f.country}\nProduct: ${product}\nVolume: ${f.volume.trim()}\nDestination port: ${f.port.trim()}${f.req.trim() ? "\nRequirement: " + f.req.trim() : ""}`);
     setSending(true); setSaved(null);
     const r = await submitEnquiry({ name: f.name.trim(), company: f.company.trim(), email: f.email.trim(), country: f.country.trim(), product,
       requirement: [`Volume: ${f.volume.trim()}`, `Destination port: ${f.port.trim()}`, f.req.trim()].filter(Boolean).join("\n"),
@@ -482,12 +482,12 @@ export function Footer() {
       <div className="wrap">
         <div className="horizon" aria-hidden="true"><span className="boat"><ShipIcon /></span></div>
         <div className="foot-top">
-          <div><a className="brand" href="#top"><img src="img/sithara-exports-logo.svg" alt="" />Sithara Exports</a><p>Three generations. One family. One standard.<br />Seafood exporter since 1967.</p></div>
+          <div><a className="brand" href="#top"><img src="img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</a><p>Three generations. One family. One standard.<br />A family seafood trade since 1967, now Zetarah Exports.</p></div>
           <div><b>Company</b><a href="#about">About</a><a href="#heritage">Heritage</a><a href="#process">How we work</a></div>
           <div><b>Seafood</b><a href="#products">Shrimps</a><a href="#products">Cuttlefish &amp; Squid</a><a href="#products">Live Mud Crabs</a></div>
           <div><b>Contact</b><a href={`mailto:${EMAIL}`}>{EMAIL}</a><a href={`tel:+${PHONE}`}>{PHONE_DISPLAY}</a><a href={wa()} target="_blank" rel="noopener">WhatsApp</a><span>Chandiroor · Cochin · Kerala</span></div>
         </div>
-        <div className="foot-base"><span>Copyright © {new Date().getFullYear()} Sithara Exports. All rights reserved.</span><span>Three generations · Since 1967</span></div>
+        <div className="foot-base"><span>Copyright © {new Date().getFullYear()} Zetarah Exports. All rights reserved.</span><span>Three generations · Since 1967</span></div>
       </div>
     </footer>
   );
@@ -509,7 +509,7 @@ export function WaFab({ ready }) {
     return () => { clearTimeout(t1); clearTimeout(t2); clearInterval(iv); };
   }, [ready, animate, scope]);
   return (
-    <motion.a ref={scope} className={`wa-fab${open ? " open" : ""}`} href={wa("Hello Sithara Exports, I'd like to request a quote.")} target="_blank" rel="noopener" aria-label="Contact now on WhatsApp"
+    <motion.a ref={scope} className={`wa-fab${open ? " open" : ""}`} href={wa("Hello Zetarah Exports, I'd like to request a quote.")} target="_blank" rel="noopener" aria-label="Contact now on WhatsApp"
       initial={{ scale: 0, rotate: -35 }} animate={ready ? { scale: 1, rotate: 0 } : undefined}
       transition={{ type: "spring", stiffness: 420, damping: 14, delay: 1.4 }} whileTap={{ scale: 0.9 }} whileHover={{ scale: 1.04 }}>
       <span className="wa-ring" aria-hidden="true" /><span className="wa-ring r2" aria-hidden="true" />
