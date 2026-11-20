@@ -1,11 +1,72 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useAnimate, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useAnimate, useInView, useScroll, useTransform } from "framer-motion";
 import { useSite, submitEnquiry, TURNSTILE_SITE_KEY } from "../site.jsx";
 import { DEST, EMAIL, FAQ, FAR, FORM_PRODUCTS, GENERATIONS, HOME, PHONE, PHONE_DISPLAY, STEPS, proj, wa } from "../data.js";
 import { track } from "../analytics.js";
 import { Arrow, Counter, EASE, EASE_IO, Magnetic, MaskLines, Reveal, ScrollWords, ShipIcon, WaIcon, useParallax } from "../motion.jsx";
 
 const VIEW = { once: true, margin: "0px 0px -10% 0px" };
+
+/* ---------------- The name: a split-flap departure board ----------------
+   SITHARA (1967) flips, tile by tile, into ZETARAH, the copper dot from the logo lands last, and the
+   three generations light up underneath. Both names have seven letters; the T is shared and never flips. */
+const FROM = "SITHARA", TO = "ZETARAH", FLAPS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const NAME_LINE = [
+  { y: "1967", who: "Mohammed", name: "Sithara Exports" },
+  { y: "1996", who: "Shaji", name: "Sithara Exports" },
+  { y: "Today", who: "Muzammil", name: "Zetarah Exports" },
+];
+function NameBoard() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
+  const [chars, setChars] = useState([...FROM]);
+  const [landed, setLanded] = useState(0);
+  const [run, setRun] = useState(0);
+  useEffect(() => {
+    if (!inView) return undefined;
+    setChars([...FROM]); setLanded(0);
+    const timers = [], STEP = 70;
+    [...TO].forEach((target, i) => {
+      const start = (run ? 300 : 1300) + i * 150; // first time: hold on SITHARA so it can be read
+      const steps = FROM[i] === target ? 0 : 6 + i * 2;
+      const from = FLAPS.indexOf(FROM[i]);
+      for (let k = 1; k <= steps; k++) {
+        const ch = k === steps ? target : FLAPS[(from + k * 7 + i * 3) % 26];
+        timers.push(setTimeout(() => setChars((c) => { const n = [...c]; n[i] = ch; return n; }), start + k * STEP));
+      }
+      timers.push(setTimeout(() => setLanded((l) => l + 1), start + steps * STEP + 20));
+    });
+    return () => timers.forEach(clearTimeout);
+  }, [inView, run]);
+  const done = landed >= TO.length;
+  const fill = !inView ? 0 : 0.5 + 0.5 * (landed / TO.length);
+  return (
+    <div className="nameboard-wrap" ref={ref}>
+      <p className="sr-only">Sithara Exports, now Zetarah Exports</p>
+      <div className="nameboard" aria-hidden="true">
+        {chars.map((ch, i) => (
+          <span key={i} className={`flap${inView && ch === TO[i] && (landed > 0 || FROM[i] === TO[i]) ? " landed" : ""}`}>
+            <motion.span key={`${run}-${ch}`} initial={{ rotateX: -85, opacity: 0.35 }} animate={{ rotateX: 0, opacity: 1 }} transition={{ duration: 0.11, ease: "easeOut" }}>{ch}</motion.span>
+          </span>
+        ))}
+        <motion.span className="flap-dot" initial={false} animate={done ? { scale: 1, y: 0, opacity: 1 } : { scale: 0, y: -40, opacity: 0 }}
+          transition={done ? { type: "spring", stiffness: 420, damping: 14 } : { duration: 0.15 }} />
+      </div>
+      <ol className="name-line">
+        <span className="nl-track" aria-hidden="true"><span className="nl-fill" style={{ transform: `scaleX(${fill})` }} /></span>
+        {NAME_LINE.map((g, k) => (
+          <li key={g.y} className={(k < 2 ? inView : done) ? "on" : ""}>
+            <b>{g.y}</b><span>{g.who}</span><em className={k === 2 ? "now" : ""}>{g.name}</em>
+          </li>
+        ))}
+      </ol>
+      <button type="button" className={`flip-again${done ? " show" : ""}`} onClick={() => setRun((r) => r + 1)} tabIndex={done ? 0 : -1}>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
+        Flip again
+      </button>
+    </div>
+  );
+}
 
 /* ---------------- Shipping lanes ---------------- */
 function arc(x1, y1, x2, y2, bend) {
@@ -160,11 +221,7 @@ export function Heritage() {
 
         <Reveal className="namecard">
           <small>The name</small>
-          <div className="big">
-            <motion.span id="sithara-word" aria-label="Zetarah" initial="h" whileInView="s" viewport={VIEW} variants={{ s: { transition: { staggerChildren: 0.06 } } }}>
-              {[..."Zetarah"].map((c, i) => <motion.span key={i} aria-hidden="true" variants={{ h: { y: "110%" }, s: { y: "0%" } }} transition={{ duration: 1.4, ease: EASE }}>{c}</motion.span>)}
-            </motion.span>{" "}<i>/ Exports</i>
-          </div>
+          <NameBoard />
           <p>Sithara Exports, founded by our grandfather in 1967, continues today as Zetarah Exports, the family’s third generation.</p>
         </Reveal>
 
@@ -482,7 +539,7 @@ export function Footer() {
       <div className="wrap">
         <div className="horizon" aria-hidden="true"><span className="boat"><ShipIcon /></span></div>
         <div className="foot-top">
-          <div><a className="brand" href="#top"><img src="img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</a><p>Three generations. One family. One standard.<br />A family seafood trade since 1967, now Zetarah Exports.</p></div>
+          <div><a className="brand logo-brand foot-logo" href="#top" aria-label="Zetarah Exports, back to top"><img className="logo-on-dark" src="img/zetarah-horizontal-reversed.svg" alt="Zetarah Exports" /><img className="logo-on-light" src="img/zetarah-horizontal.svg" alt="Zetarah Exports" /></a><p>Three generations. One family. One standard.<br />A family seafood trade since 1967, now Zetarah Exports.</p></div>
           <div><b>Company</b><a href="#about">About</a><a href="#heritage">Heritage</a><a href="#process">How we work</a></div>
           <div><b>Seafood</b><a href="#products">Shrimps</a><a href="#products">Cuttlefish &amp; Squid</a><a href="#products">Live Mud Crabs</a></div>
           <div><b>Contact</b><a href={`mailto:${EMAIL}`}>{EMAIL}</a><a href={`tel:+${PHONE}`}>{PHONE_DISPLAY}</a><a href={wa()} target="_blank" rel="noopener">WhatsApp</a><span>Chandiroor · Cochin · Kerala</span></div>

@@ -315,8 +315,6 @@ em.s { font-family: var(--serif); font-style: italic; font-weight: 400; letter-s
 .namecard small { color: var(--ember); letter-spacing: 0.2em; text-transform: uppercase; font-size: 0.75rem; font-weight: 500; }
 .namecard .big { margin: 1rem 0 0.8rem; font-family: var(--serif); font-size: clamp(3rem, 8vw, 6rem); line-height: 1.05; }
 .namecard .big i { font-size: 0.5em; color: var(--cream); }
-#sithara-word { display: inline-flex; overflow: hidden; padding-bottom: 0.08em; vertical-align: bottom; }
-#sithara-word span { display: inline-block; }
 .namecard p { color: var(--ash); max-width: 46ch; margin-inline: auto; }
 .chaps { margin-top: clamp(3.5rem, 7vw, 5rem); }
 .chap { display: grid; grid-template-columns: minmax(0, 230px) minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); padding-block: clamp(2rem, 4vw, 2.6rem); border-top: 1px solid var(--hair); }
@@ -771,3 +769,42 @@ body.pl-lock { overflow: hidden; }
 .offer-sizes span { color: var(--muted); font-size: 0.8rem; }
 .offer-meta { color: var(--muted); font-size: 0.92rem; margin: 0; }
 .offer-btn { margin-top: auto; align-self: flex-start; }
+
+/* Zetarah logo (kit): white name on dark backgrounds, navy name on light; copper dot always */
+.logo-brand img { width: auto; height: 26px; display: block; }
+/* white version by default (dark theme, the dark hero, the always-black footer); navy only where the
+   background is actually light: the scrolled header and the phone menu in light mode */
+.logo-brand .logo-on-light { display: none; }
+:root[data-theme="light"] .lnav.scrolled:not(.on-dark) .logo-on-dark,
+:root[data-theme="light"] .pmenu .logo-on-dark { display: none; }
+:root[data-theme="light"] .lnav.scrolled:not(.on-dark) .logo-on-light,
+:root[data-theme="light"] .pmenu .logo-on-light { display: block; }
+.foot-logo img { height: 64px; }
+@media (max-width: 760px) { .lnav .logo-brand img { height: 22px; } }
+@media (max-width: 360px) { .lnav .logo-brand img { height: 19px; } }
+
+/* Name card: split-flap board SITHARA -> ZETARAH */
+.nameboard-wrap { margin: 1.5rem 0 1.2rem; }
+.nameboard { display: flex; justify-content: center; align-items: flex-end; gap: clamp(4px, 0.8vw, 8px); perspective: 600px; }
+.flap { position: relative; display: grid; place-items: center; overflow: hidden; width: clamp(32px, 9vw, 64px); height: clamp(46px, 12.6vw, 90px); border-radius: clamp(5px, 0.8vw, 9px);
+  background: linear-gradient(#1b1e23 0 50%, #131519 50% 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 12px 26px -14px rgba(0,0,0,0.9);
+  font-family: var(--font); font-weight: 600; font-size: clamp(1.45rem, 6.4vw, 3.3rem); color: #6E7480; transition: color 400ms; }
+.flap::after { content: ""; position: absolute; inset: 50% 0 auto; height: 1px; background: rgba(0,0,0,0.7); box-shadow: 0 1px 0 rgba(255,255,255,0.05); }
+.flap > span { display: block; transform-origin: 50% 50%; backface-visibility: hidden; }
+.flap.landed { color: #FFFFFF; }
+.flap-dot { flex: none; width: clamp(9px, 1.7vw, 16px); height: clamp(9px, 1.7vw, 16px); border-radius: 50%; background: #E0703A; margin: 0 0 clamp(6px, 1.2vw, 12px) 2px; box-shadow: 0 0 18px rgba(224,112,58,0.55); }
+.name-line { position: relative; list-style: none; padding: 0; margin: clamp(1.6rem, 3.5vw, 2.4rem) auto 0; max-width: 560px; display: grid; grid-template-columns: repeat(3, 1fr); }
+.nl-track { position: absolute; top: 5px; left: 16.66%; right: 16.66%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+.nl-fill { position: absolute; inset: 0; background: linear-gradient(90deg, var(--ember), #E0703A); transform-origin: left; transition: transform 900ms cubic-bezier(.22,1,.36,1); }
+.name-line li { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.1rem; padding: 1.3rem 0.3rem 0; text-align: center; font-size: 0.8rem; color: var(--ash); opacity: 0.45; transition: opacity 600ms; }
+.name-line li::before { content: ""; position: absolute; top: 0; width: 12px; height: 12px; border-radius: 50%; background: #2A2D33; box-shadow: 0 0 0 4px rgba(0,0,0,0.6); transition: background 500ms, box-shadow 500ms; }
+.name-line li.on { opacity: 1; }
+.name-line li.on::before { background: var(--ember); box-shadow: 0 0 0 4px rgba(238,122,66,0.18); }
+.name-line b { color: var(--cream); font-weight: 600; font-size: 0.95rem; }
+.name-line em { font-style: normal; font-size: 0.72rem; letter-spacing: 0.04em; }
+.name-line em.now { color: #E0703A; font-weight: 600; }
+.flip-again { margin: 1.4rem auto 0; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.45rem 0.9rem; border-radius: 99px; border: 1px solid rgba(255,255,255,0.14);
+  background: transparent; color: var(--ash); font: inherit; font-size: 0.78rem; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 400ms, color 200ms, border-color 200ms; }
+.flip-again.show { opacity: 1; pointer-events: auto; }
+.flip-again:hover { color: var(--snow); border-color: rgba(255,255,255,0.3); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }

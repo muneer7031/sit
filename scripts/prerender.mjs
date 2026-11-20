@@ -17,7 +17,7 @@ const org = {
   name: "Zetarah Exports",
   alternateName: "Sithara Exports",
   url: SITE_URL,
-  logo: SITE_URL + "img/zetarah-exports-logo.svg",
+  logo: SITE_URL + "icon-512.png",
   image: SITE_URL + "img/og.jpg",
   description: "Family seafood exporter in Cochin (Kochi), Kerala, India: the third generation of the family behind Sithara Exports (est. 1967). Fresh, frozen, live and dried seafood for importers worldwide, packed to the buyer's specification.",
   email: EMAIL,
