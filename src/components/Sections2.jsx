@@ -110,7 +110,7 @@ export function Routes() {
           <Reveal as="h2" id="routes-title" className="h-lg" style={{ marginTop: "1.2rem" }}>From Cochin to <em className="s">every part of the world.</em></Reveal>
           <Reveal as="p" className="lead" style={{ marginTop: "1.2rem" }} delay={0.08}>Over the decades we have shipped to buyers in every part of the world, most often in the Middle East, Asia and Europe. Every order is dispatched from Cochin.</Reveal>
           <Reveal className="lane-filter" role="group" aria-label="Show shipping lanes by region" delay={0.14}>
-            {[["all", "All lanes"], ["me", "Middle East"], ["as", "Asia"], ["eu", "Europe"], ["world", "Africa, Americas & Australia"]].map(([r, l]) => (
+            {[["all", "All lanes"], ["me", "Middle East"], ["as", "Asia"], ["eu", "Europe"], ["world", "Africa, North America & Australia"]].map(([r, l]) => (
               <motion.button key={r} type="button" aria-pressed={region === r} onClick={() => setRegion(r)} whileTap={{ scale: 0.95 }}>
                 {region === r && <motion.span layoutId="lane-pill" className="lane-pill" transition={{ type: "spring", stiffness: 420, damping: 34 }} />}
                 <span className="lane-label">{l}</span>
@@ -119,7 +119,7 @@ export function Routes() {
           </Reveal>
         </div>
         <Reveal className="map" ref={map}>
-          <svg viewBox="0 0 640 310" role="img" aria-label="Shipping lanes from Cochin to the Middle East, Asia, Europe, Africa, the Americas and Australia">
+          <svg viewBox="0 0 640 310" role="img" aria-label="Shipping lanes from Cochin to the Middle East, Asia, Europe, Africa, Canada, the USA, Mexico and Australia">
             <defs>
               <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#F2E8D0" fillOpacity="0.2" /></pattern>
               <radialGradient id="fade" cx="55%" cy="60%" r="65%"><stop offset="0" stopColor="#fff" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></radialGradient>
@@ -145,7 +145,7 @@ export function Routes() {
             <circle className="node home" cx={HOME[0]} cy={HOME[1]} r="5" />
             <text x={HOME[0] - 4} y={HOME[1] + 20} textAnchor="middle" className="home-t">Cochin</text>
             <text x={HOME[0] - 4} y={HOME[1] + 32} textAnchor="middle" className="sm">PORT OF LOADING</text>
-            {lanes.filter((l) => l.far).map((l) => <text key={l.n} x={l.tx} y={l.ty} textAnchor={l.a} className={"sm far-t" + dim(l.r)}>{l.n}</text>)}
+            {lanes.filter((l) => l.far).map((l) => <text key={l.n} x={l.tx} y={l.ty} textAnchor={l.a} className={(l.c ? "far-c" : "sm far-t") + dim(l.r)}>{l.n}</text>)}
           </svg>
         </Reveal>
       </div>
@@ -539,7 +539,7 @@ export function Footer() {
       <div className="wrap">
         <div className="horizon" aria-hidden="true"><span className="boat"><ShipIcon /></span></div>
         <div className="foot-top">
-          <div><a className="brand logo-brand foot-logo" href="#top" aria-label="Zetarah Exports, back to top"><img className="logo-on-dark" src="img/zetarah-horizontal-reversed.svg" alt="Zetarah Exports" /><img className="logo-on-light" src="img/zetarah-horizontal.svg" alt="Zetarah Exports" /></a><p>Three generations. One family. One standard.<br />A family seafood trade since 1967, now Zetarah Exports.</p></div>
+          <div><a className="brand" href="#top"><img src="img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</a><p>Three generations. One family. One standard.<br />A family seafood trade since 1967, now Zetarah Exports.</p></div>
           <div><b>Company</b><a href="#about">About</a><a href="#heritage">Heritage</a><a href="#process">How we work</a></div>
           <div><b>Seafood</b><a href="#products">Shrimps</a><a href="#products">Cuttlefish &amp; Squid</a><a href="#products">Live Mud Crabs</a></div>
           <div><b>Contact</b><a href={`mailto:${EMAIL}`}>{EMAIL}</a><a href={`tel:+${PHONE}`}>{PHONE_DISPLAY}</a><a href={wa()} target="_blank" rel="noopener">WhatsApp</a><span>Chandiroor · Cochin · Kerala</span></div>

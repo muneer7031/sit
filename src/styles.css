@@ -725,6 +725,7 @@ body.pl-lock { overflow: hidden; }
 
 /* ---------- Map lanes beyond the edges ---------- */
 .map text.far-t { fill: #F2E8D0; fill-opacity: 0.75; }
+.map text.far-c { font-size: 12.5px; } /* Canada, USA, Mexico: country names like the others (lanes run off the map edge) */
 .map .dim { opacity: 0.15; transition: opacity 300ms; }
 
 /* ---------- Contact links ---------- */
@@ -770,18 +771,8 @@ body.pl-lock { overflow: hidden; }
 .offer-meta { color: var(--muted); font-size: 0.92rem; margin: 0; }
 .offer-btn { margin-top: auto; align-self: flex-start; }
 
-/* Zetarah logo (kit): white name on dark backgrounds, navy name on light; copper dot always */
-.logo-brand img { width: auto; height: 26px; display: block; }
-/* white version by default (dark theme, the dark hero, the always-black footer); navy only where the
-   background is actually light: the scrolled header and the phone menu in light mode */
-.logo-brand .logo-on-light { display: none; }
-:root[data-theme="light"] .lnav.scrolled:not(.on-dark) .logo-on-dark,
-:root[data-theme="light"] .pmenu .logo-on-dark { display: none; }
-:root[data-theme="light"] .lnav.scrolled:not(.on-dark) .logo-on-light,
-:root[data-theme="light"] .pmenu .logo-on-light { display: block; }
-.foot-logo img { height: 64px; }
-@media (max-width: 760px) { .lnav .logo-brand img { height: 22px; } }
-@media (max-width: 360px) { .lnav .logo-brand img { height: 19px; } }
+/* Brand: the dashboard's "z." app icon beside the name (rounded tile, like the dashboard) */
+.brand img { border-radius: 22%; }
 
 /* Name card: split-flap board SITHARA -> ZETARAH */
 .nameboard-wrap { margin: 1.5rem 0 1.2rem; }

@@ -54,7 +54,10 @@ export const DEST = [
 ];
 export const FAR = [
   { n: "AFRICA", x: 214, y: 268, tx: 214, ty: 288, a: "middle" },
-  { n: "AMERICAS", x: 2, y: 196, tx: 8, ty: 212, a: "start" },
+  // North America is off the map's left edge: one lane each, in north-to-south order
+  { n: "Canada", c: true, x: 2, y: 172, tx: 7, ty: 168, a: "start" },
+  { n: "USA", c: true, x: 2, y: 196, tx: 7, ty: 192, a: "start" },
+  { n: "Mexico", c: true, x: 2, y: 220, tx: 7, ty: 216, a: "start" },
   { n: "AUSTRALIA", x: 600, y: 306, tx: 632, ty: 296, a: "end" },
 ];
 
