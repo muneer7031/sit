@@ -799,3 +799,6 @@ body.pl-lock { overflow: hidden; }
 .flip-again.show { opacity: 1; pointer-events: auto; }
 .flip-again:hover { color: var(--snow); border-color: rgba(255,255,255,0.3); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* Brand name beside the "z." icon: the logo's own typeface, Inter Display SemiBold (Inter at its display optical size) */
+.brand, .pl-brand b { font-family: "Inter", var(--font); font-weight: 600; font-variation-settings: "opsz" 32; font-optical-sizing: none; letter-spacing: -0.025em; }
