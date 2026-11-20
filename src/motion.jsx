@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 import { animate, motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 
 export const EASE = [0.22, 1, 0.36, 1];
@@ -62,10 +62,14 @@ export function ScrollWords({ as = "p", parts, ...rest }) {
   );
 }
 
-/* Number that counts up once in view */
+/* Number that counts up once in view.
+   The page's code holds the real number (so Google and link previews read 1967, not 1900);
+   in the browser it is reset to the start value before the first paint, then counts up when seen. */
+const useBeforePaint = typeof window === "undefined" ? useEffect : useLayoutEffect;
 export function Counter({ to, from = 0 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  useBeforePaint(() => { if (ref.current && !inView) ref.current.textContent = from; }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!inView || !ref.current) return;
     const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
@@ -73,7 +77,7 @@ export function Counter({ to, from = 0 }) {
     const c = animate(from, to, { duration: 2.2, ease: [0.16, 1, 0.3, 1], onUpdate: (v) => { if (ref.current) ref.current.textContent = Math.round(v); } });
     return () => c.stop();
   }, [inView, from, to]);
-  return <span ref={ref}>{from}</span>;
+  return <span ref={ref}>{to}</span>;
 }
 
 /* Inner image drifts inside its frame while the frame scrolls past */
