@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useLayoutEffect, useRef } from "react";
+import { Fragment, forwardRef, useEffect, useLayoutEffect, useRef } from "react";
 import { animate, motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 
 export const EASE = [0.22, 1, 0.36, 1];
@@ -23,13 +23,17 @@ export function MaskLines({ as = "h2", lines, play, delay = 0, ...rest }) {
   return (
     <C {...rest} initial="hide" {...(manual ? { animate: play ? "show" : "hide" } : { whileInView: "show", viewport: VIEW })}>
       {lines.map((ln, i) => (
-        <span className="line" key={i}>
-          <motion.span
-            variants={{ hide: { y: "118%", rotate: 3 }, show: { y: "0%", rotate: 0 } }}
-            transition={{ duration: 1.4, ease: EASE, delay: delay + i * 0.11 }}>
-            {ln}
-          </motion.span>
-        </span>
+        <Fragment key={i}>
+          <span className="line">
+            <motion.span
+              variants={{ hide: { y: "118%", rotate: 3 }, show: { y: "0%", rotate: 0 } }}
+              transition={{ duration: 1.4, ease: EASE, delay: delay + i * 0.11 }}>
+              {ln}
+            </motion.span>
+          </span>
+          {/* a real space between lines, so Google, screen readers and link previews read "coast to", not "coastto" */}
+          {i < lines.length - 1 && " "}
+        </Fragment>
       ))}
     </C>
   );

@@ -401,12 +401,12 @@ export function Faq() {
 
 /* ---------------- Contact ---------------- */
 export function Contact({ prefill }) {
-  const [f, setF] = useState({ name: "", company: "", email: "", country: "", product: 0, req: "", website: "" });
+  const [f, setF] = useState({ name: "", company: "", email: "", country: "", product: 0, volume: "", port: "", req: "", website: "" });
   const [saved, setSaved] = useState(null); // null = not sent yet, true = saved to our system, false = not saved
   const [err, setErr] = useState(""), [msg, setMsg] = useState(""), [status, setStatus] = useState("");
   useEffect(() => {
     if (!prefill) return;
-    setF((s) => ({ ...s, product: prefill.opt, req: s.req.trim() ? s.req : `Product: ${prefill.n}\nGrade / size: \nQuantity: \nPacking: \nDestination port: ` }));
+    setF((s) => ({ ...s, product: prefill.opt, req: s.req.trim() ? s.req : `Product: ${prefill.n}\nGrade / size: \nPacking: ` }));
   }, [prefill]);
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
   const submit = (e) => {
@@ -415,12 +415,14 @@ export function Contact({ prefill }) {
     if (!f.name.trim()) missing.push("your name");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) missing.push("a valid email");
     if (!f.country.trim()) missing.push("your country");
-    if (missing.length) { setErr("Add " + missing.join(", ") + " so we can reply."); setMsg(""); return; }
+    if (!f.volume.trim()) missing.push("the volume you need");
+    if (!f.port.trim()) missing.push("your destination port");
+    if (missing.length) { setErr("Add " + (missing.length > 1 ? missing.slice(0, -1).join(", ") + " and " + missing[missing.length - 1] : missing[0]) + " so we can reply."); setMsg(""); return; }
     setErr(""); setStatus(""); track("inquiry_prepared", FORM_PRODUCTS[f.product]);
     // Also save it straight to Sithara's dashboard, so it isn't lost if WhatsApp/email is never sent.
     // "website" is a hidden trap field that only bots fill in.
-    if (!f.website) { setSaved(null); saveEnquiry({ name: f.name.trim(), company: f.company.trim(), email: f.email.trim(), country: f.country.trim(), product: FORM_PRODUCTS[f.product], requirement: f.req.trim() }).then(setSaved); }
-    setMsg(`Inquiry for Sithara Exports\nName: ${f.name}${f.company.trim() ? "\nCompany: " + f.company : ""}\nEmail: ${f.email}\nCountry: ${f.country}\nProduct: ${FORM_PRODUCTS[f.product]}${f.req.trim() ? "\nRequirement: " + f.req.trim() : ""}`);
+    if (!f.website) { setSaved(null); saveEnquiry({ name: f.name.trim(), company: f.company.trim(), email: f.email.trim(), country: f.country.trim(), product: FORM_PRODUCTS[f.product], requirement: [`Volume: ${f.volume.trim()}`, `Destination port: ${f.port.trim()}`, f.req.trim()].filter(Boolean).join("\n") }).then(setSaved); }
+    setMsg(`Inquiry for Sithara Exports\nName: ${f.name}${f.company.trim() ? "\nCompany: " + f.company : ""}\nEmail: ${f.email}\nCountry: ${f.country}\nProduct: ${FORM_PRODUCTS[f.product]}\nVolume: ${f.volume.trim()}\nDestination port: ${f.port.trim()}${f.req.trim() ? "\nRequirement: " + f.req.trim() : ""}`);
   };
   const copy = () => navigator.clipboard.writeText(msg).then(() => setStatus(`Copied. Paste it into an email to ${EMAIL}`), () => setStatus("Select the text above and press Ctrl+C to copy."));
   return (
@@ -447,8 +449,10 @@ export function Contact({ prefill }) {
             <select id="q-product" value={f.product} onChange={(e) => setF((s) => ({ ...s, product: Number(e.target.value) }))}>
               {FORM_PRODUCTS.map((p, i) => <option key={p} value={i}>{p}</option>)}
             </select></div>
+          <div className="f"><label htmlFor="q-volume">Volume</label><input id="q-volume" value={f.volume} onChange={set("volume")} placeholder="e.g. 25 MT or 1 x 40ft" required /></div>
+          <div className="f"><label htmlFor="q-port">Destination port</label><input id="q-port" value={f.port} onChange={set("port")} placeholder="e.g. Jebel Ali, Qingdao" required /></div>
           <div className="hp" aria-hidden="true"><label htmlFor="q-website">Website</label><input id="q-website" tabIndex={-1} autoComplete="off" value={f.website} onChange={set("website")} /></div>
-          <div className="f full"><label htmlFor="q-req">Requirement</label><textarea id="q-req" value={f.req} onChange={set("req")} placeholder="Grade, quantity, packing and destination port" /></div>
+          <div className="f full"><label htmlFor="q-req">Requirement</label><textarea id="q-req" value={f.req} onChange={set("req")} placeholder="Grade / size, packing and anything else we should know" /></div>
           {err && <p className="form-err">{err}</p>}
           <div className="form-foot">
             <Magnetic as="button" className="btn btn-ember" type="submit">Send Inquiry <Arrow /></Magnetic>
