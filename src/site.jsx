@@ -4,7 +4,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { GALLERY, PRODUCTS } from "./data.js";
 
-const Ctx = createContext({ products: PRODUCTS, gallery: GALLERY, testimonials: [] });
+const Ctx = createContext({ products: PRODUCTS, gallery: GALLERY, testimonials: [], offers: [] });
 // Photos published from the online dashboard (Supabase public storage)
 const SUPABASE = "https://ocdfjuvesnkimqiexqyw.supabase.co";
 const ONLINE = `${SUPABASE}/storage/v1/object/public/public-media/manifest.json`;
@@ -23,7 +23,7 @@ export async function submitEnquiry(e) {
   } catch { return { ok: false, error: "" }; }
 }
 const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z]/g, "");
-const formOption = (name) => { const n = norm(name); return /shrimp|prawn|vannamei|tiger|scampi|poovalan/.test(n) ? 0 : /squid|cuttle|octopus/.test(n) ? 1 : /crab/.test(n) ? 3 : 2; };
+export const formOption = (name) => { const n = norm(name); return /shrimp|prawn|vannamei|tiger|scampi|poovalan/.test(n) ? 0 : /squid|cuttle|octopus/.test(n) ? 1 : /crab/.test(n) ? 3 : 2; };
 
 export function merge(manifest) {
   // Product photos come only from the dashboard; until it has published one, the card shows a plain panel.
@@ -57,7 +57,16 @@ export function SiteMediaProvider({ children }) {
     fetch(`${SUPABASE}/storage/v1/object/public/public-media/testimonials.json`, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
       .then((d) => setTestimonials(Array.isArray(d?.items) ? d.items.filter((t) => t && t.quote && (t.company || t.name)) : []));
   }, []);
-  const value = useMemo(() => ({ ...merge(manifest), testimonials }), [manifest, testimonials]);
+  // Offers published from the dashboard (offer page → "Show on the website" → public-media/offers.json)
+  const [offers, setOffers] = useState([]);
+  useEffect(() => {
+    fetch(`${SUPABASE}/storage/v1/object/public/public-media/offers.json`, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((d) => {
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        setOffers(Array.isArray(d?.items) ? d.items.filter((o) => o && o.headline && Array.isArray(o.sizes) && (!o.validUntil || new Date(o.validUntil) >= today)) : []);
+      });
+  }, []);
+  const value = useMemo(() => ({ ...merge(manifest), testimonials, offers }), [manifest, testimonials, offers]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

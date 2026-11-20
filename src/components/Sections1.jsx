@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { ALSO, wa } from "../data.js";
-import { useSite } from "../site.jsx";
+import { formOption, useSite } from "../site.jsx";
+import { track } from "../analytics.js";
 import { EASE, Reveal, ScrollWords, useParallax } from "../motion.jsx";
 
 /* ---------------- About statement ---------------- */
@@ -205,5 +206,44 @@ export function ProductSheet({ index, onClose, onNav, onQuote }) {
         </motion.div>
       </motion.div>
     </motion.div>
+  );
+}
+
+
+/* ---------------- Available now: live offers published from the dashboard ---------------- */
+const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+const tons = (q) => (q == null || q === "" ? "" : `${Number(q) % 1 ? Number(q).toFixed(1) : Number(q)} MT`);
+export function Offers({ onRequest }) {
+  const { offers } = useSite();
+  const seen = useRef(null);
+  useEffect(() => {
+    if (!offers.length || !seen.current) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { track("offers_seen", String(offers.length), { onlyOnce: true }); io.disconnect(); } }, { threshold: 0.3 });
+    io.observe(seen.current); return () => io.disconnect();
+  }, [offers.length]);
+  if (!offers.length) return null; // nothing published: no section
+  return (
+    <section className="offers-s" id="offers" aria-labelledby="offers-title" ref={seen}>
+      <div className="wrap">
+        <div className="offers-head">
+          <div>
+            <p className="eyebrow"><span className="live-dot" aria-hidden="true" />Available now</p>
+            <Reveal as="h2" id="offers-title" className="h-lg" style={{ marginTop: "1.2rem" }}>This week’s <em className="s">ready stock.</em></Reveal>
+          </div>
+          <Reveal as="p" className="lead" delay={0.08}>Confirmed lots we can offer right now. Prices on request, quoted for your port.</Reveal>
+        </div>
+        <div className="offer-grid">
+          {offers.map((o, i) => (
+            <Reveal className="offer" key={o.ref || i} delay={(i % 3) * 0.06}>
+              <div className="offer-top"><span className="offer-ref">{o.ref}</span>{o.validUntil && <span className="offer-valid">Until {fmtDate(o.validUntil)}</span>}</div>
+              <h3>{o.headline}</h3>
+              <ul className="offer-sizes">{o.sizes.map((z, k) => <li key={k}><b>{z.size}</b>{tons(z.qty) && <span>{tons(z.qty)}</span>}</li>)}</ul>
+              {(o.availability || o.note) && <p className="offer-meta">{[o.availability, o.note].filter(Boolean).join(" · ")}</p>}
+              <button type="button" className="btn btn-ember offer-btn" onClick={() => onRequest(o)}>Request this</button>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

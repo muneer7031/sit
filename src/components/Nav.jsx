@@ -28,7 +28,7 @@ function ThemeToggle() {
   );
 }
 
-const LINKS = [["#about", "About"], ["#products", "Products"], ["#routes", "Where we ship"], ["#heritage", "Heritage"], ["#process", "How we work"], ["#faq", "FAQ"], ["#contact", "Contact"]];
+const LINKS = [["#about", "About"], ["#products", "Products"], ["#offers", "Available now"], ["#routes", "Where we ship"], ["#heritage", "Heritage"], ["#process", "How we work"], ["#faq", "FAQ"], ["#contact", "Contact"]];
 
 /* Phone menu: a button in the header opens a full-screen list of the sections */
 function PhoneMenu() {
@@ -60,7 +60,7 @@ function PhoneMenu() {
               </button>
             </div>
             <nav aria-label="Sections">
-              {LINKS.map(([h, l], i) => (
+              {LINKS.filter(([h]) => typeof document === "undefined" || document.querySelector(h)).map(([h, l], i) => (
                 <motion.a key={h} href={h} onClick={go(h)} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE, delay: 0.04 * i }}>{l}</motion.a>
               ))}
             </nav>

@@ -377,7 +377,9 @@ export function Contact({ prefill }) {
   const ts = useRef(null), tsToken = useRef("");
   useEffect(() => {
     if (!prefill) return;
-    setF((s) => ({ ...s, product: String(prefill.opt), req: s.req.trim() ? s.req : `Product: ${prefill.n}\nGrade / size: \nPacking: ` }));
+    const o = prefill.offer;
+    const req = o ? `About offer ${o.ref}: ${o.headline}\nSizes: ${o.sizes.map((z) => z.size + (z.qty ? ` (${z.qty} MT)` : "")).join(", ")}` : `Product: ${prefill.n}\nGrade / size: \nPacking: `;
+    setF((s) => ({ ...s, product: String(prefill.opt), req: o || !s.req.trim() ? req : s.req }));
   }, [prefill]);
   // Cloudflare Turnstile human check (only when a site key is configured in site.jsx)
   useEffect(() => {
@@ -406,6 +408,7 @@ export function Contact({ prefill }) {
       requirement: [`Volume: ${f.volume.trim()}`, `Destination port: ${f.port.trim()}`, f.req.trim()].filter(Boolean).join("\n"),
       website: f.website, elapsed: Date.now() - shownAt.current, turnstile: tsToken.current });
     setSending(false); setSaved(r.ok);
+    if (r.ok) track("inquiry_sent", product);
     if (!r.ok && r.error) setSrvErr(r.error);
     if (TURNSTILE_SITE_KEY) { window.turnstile?.reset(ts.current); tsToken.current = ""; }
   };
@@ -425,7 +428,7 @@ export function Contact({ prefill }) {
           </Reveal>
           <Magnetic className="btn wa" href={wa()} target="_blank" rel="noopener"><WaIcon /> Chat on WhatsApp</Magnetic>
         </div>
-        <Reveal as="form" className="inq" noValidate onSubmit={submit}>
+        <Reveal as="form" className="inq" noValidate onSubmit={submit} onFocus={() => track("form_start", "", { onlyOnce: true })}>
           <p className="req-note">Fields marked <b className="req">*</b> are required.</p>
           <div className={`f${errs.name ? " bad" : ""}`}><label htmlFor="q-name">Name <b className="req" aria-hidden="true">*</b></label><input id="q-name" autoComplete="name" value={f.name} onChange={set("name")} placeholder="e.g. Ahmed Al Mansoori" required aria-invalid={!!errs.name} aria-describedby={errs.name ? "q-name-err" : undefined} />{errs.name && <span className="f-err" id="q-name-err">{errs.name}</span>}</div>
           <div className={`f${errs.company ? " bad" : ""}`}><label htmlFor="q-company">Company <span className="opt">(optional)</span></label><input id="q-company" autoComplete="organization" value={f.company} onChange={set("company")} placeholder="e.g. Gulf Fresh Foods LLC" />{errs.company && <span className="f-err" id="q-company-err">{errs.company}</span>}</div>
