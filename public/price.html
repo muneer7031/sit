@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Send your prices | Zetarah Exports</title>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    :root { --bg: #F5F4F0; --card: #fff; --ink: #0E2235; --muted: #5E6B7A; --line: #E2E0DA; --accent: #E0703A; --accent-ink: #fff; --bad: #B42318; --good: #15803D; color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif; }
+    header { background: #0E2235; color: #fff; }
+    .wrap { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+    header .wrap { display: flex; align-items: center; gap: 10px; height: 60px; font-weight: 600; letter-spacing: -0.02em; }
+    header img { width: 30px; height: 30px; border-radius: 22%; }
+    main { padding: 22px 0 60px; }
+    h1 { font-size: 1.6rem; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.02em; }
+    .muted { color: var(--muted); }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin: 14px 0; }
+    label { display: grid; gap: 4px; font-size: .9rem; font-weight: 600; margin: 10px 0; }
+    label span.opt { font-weight: 400; color: var(--muted); }
+    input, select, textarea { font: inherit; padding: 11px 12px; border: 1px solid #CFCAC0; border-radius: 10px; background: #fff; color: inherit; width: 100%; min-width: 0; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .line { display: grid; grid-template-columns: 1.3fr 1fr 1fr 40px; gap: 8px; align-items: end; padding: 10px 0; border-top: 1px dashed var(--line); }
+    .line:first-of-type { border-top: 0; }
+    .line label { margin: 0; font-size: .78rem; }
+    .x { height: 44px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font-size: 1.3rem; cursor: pointer; }
+    button.main, button.ghost { font: inherit; font-weight: 600; border-radius: 999px; padding: 13px 18px; cursor: pointer; border: 0; }
+    button.main { background: var(--accent); color: var(--accent-ink); width: 100%; font-size: 1.05rem; }
+    button.main:disabled { opacity: .6; }
+    button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+    .err { color: var(--bad); font-weight: 600; }
+    .ok { text-align: center; padding: 28px 16px; }
+    .ok .tick { width: 64px; height: 64px; border-radius: 50%; background: #DCFCE7; color: var(--good); display: grid; place-items: center; margin: 0 auto 12px; font-size: 2rem; }
+    .hide { display: none !important; }
+    .hp { position: absolute; left: -9999px; }
+    @media (max-width: 420px) { .line { grid-template-columns: 1fr 1fr; } .line .sz { grid-column: 1 / -1; } .line .x { grid-column: 2; justify-self: end; width: 44px; } .row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><img src="/img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</div></header>
+  <main class="wrap">
+    <div id="loading" class="muted">Loading…</div>
+    <div id="bad" class="card hide"><p class="err" id="badmsg"></p></div>
+
+    <form id="f" class="hide" novalidate>
+      <h1>Send your prices</h1>
+      <p class="muted" id="hello"></p>
+
+      <div class="card">
+        <label>Product
+          <select id="product" required><option value="">Choose…</option></select>
+        </label>
+        <label id="otherwrap" class="hide">Product name <input id="other" maxlength="80" placeholder="e.g. Yellowfin tuna loins" /></label>
+      </div>
+
+      <div class="card">
+        <b>Sizes, quantity and price</b>
+        <p class="muted" style="margin:2px 0 0;font-size:.85rem">Price per kg. Add a line for each size.</p>
+        <div id="lines"></div>
+        <button type="button" class="ghost" id="add">+ Add another size</button>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <label>Currency <select id="currency"></select></label>
+          <label>Terms <select id="terms"></select></label>
+        </div>
+        <div class="row">
+          <label>Price valid until <span class="opt">(optional)</span><input type="date" id="valid" /></label>
+          <label>Port / destination <span class="opt">(optional)</span><input id="dest" maxlength="80" placeholder="e.g. Cochin" /></label>
+        </div>
+        <label>Availability <span class="opt">(optional)</span><input id="avail" maxlength="120" placeholder="e.g. Ready stock, 2 containers" /></label>
+        <label>Notes <span class="opt">(optional)</span><textarea id="remarks" rows="3" maxlength="1000" placeholder="Packing, glazing, anything else"></textarea></label>
+        <input class="hp" id="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      </div>
+
+      <p class="err hide" id="err" role="alert"></p>
+      <button class="main" id="send" type="submit">Send prices</button>
+      <p class="muted" style="font-size:.8rem;text-align:center;margin-top:12px">Your prices go only to Zetarah Exports. <a href="/privacy.html">Privacy</a></p>
+    </form>
+
+    <div id="done" class="card ok hide">
+      <div class="tick">✓</div>
+      <h1>Thank you</h1>
+      <p class="muted" id="donemsg">Your prices have been sent to Zetarah Exports. We'll confirm with you before offering them to a buyer.</p>
+      <button class="ghost" id="again" type="button">Send prices for another product</button>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var API = "https://ocdfjuvesnkimqiexqyw.supabase.co/functions/v1/supplier-link";
+      var token = (location.hash.match(/t=([A-Za-z0-9_-]+)/) || location.search.match(/t=([A-Za-z0-9_-]+)/) || [])[1] || "";
+      var $ = function (id) { return document.getElementById(id); };
+      var info = null;
+      function show(id) { ["loading", "bad", "f", "done"].forEach(function (x) { $(x).classList.toggle("hide", x !== id); }); }
+      function bad(msg) { $("badmsg").textContent = msg; show("bad"); }
+      function opt(sel, v, t) { var o = document.createElement("option"); o.value = v; o.textContent = t || v; sel.appendChild(o); }
+      function sizesFor() { var p = info && info.products.filter(function (x) { return x.id === $("product").value; })[0]; return p ? p.sizes : []; }
+      function addLine(size) {
+        var d = document.createElement("div"); d.className = "line";
+        var list = "dl" + Math.random().toString(36).slice(2);
+        d.innerHTML = '<label class="sz">Size<input class="size" maxlength="40" list="' + list + '" placeholder="e.g. 31/40" /><datalist id="' + list + '"></datalist></label>' +
+          '<label>Qty (MT)<input class="qty" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 10" /></label>' +
+          '<label>Price / kg<input class="price" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 6.20" /></label>' +
+          '<button type="button" class="x" aria-label="Remove this size">×</button>';
+        var dl = d.querySelector("datalist"); sizesFor().forEach(function (s) { opt(dl, s); });
+        if (size) d.querySelector(".size").value = size;
+        d.querySelector(".x").onclick = function () { if (document.querySelectorAll(".line").length > 1) d.remove(); };
+        $("lines").appendChild(d);
+      }
+      function resetForm() { $("f").reset(); $("lines").innerHTML = ""; addLine(); $("otherwrap").classList.add("hide"); $("err").classList.add("hide"); }
+
+      if (!token) return bad("This link is incomplete. Please open the full link Zetarah Exports sent you.");
+      fetch(API + "?t=" + encodeURIComponent(token)).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); }).then(function (res) {
+        if (!res.ok) return bad(res.j.error || "This link isn't working. Please ask Zetarah Exports for a new one.");
+        info = res.j;
+        $("hello").textContent = "For " + info.supplier + (info.contact ? " (" + info.contact + ")" : "") + ". Fill in the product, sizes and prices, then press Send.";
+        info.products.forEach(function (p) { opt($("product"), p.id, p.name); }); opt($("product"), "__other", "Other product…");
+        info.currencies.forEach(function (c) { opt($("currency"), c); });
+        info.terms.forEach(function (t) { opt($("terms"), t); }); $("terms").value = "FOB";
+        try { var last = JSON.parse(localStorage.getItem("zx-price") || "{}"); if (last.currency) $("currency").value = last.currency; if (last.terms) $("terms").value = last.terms; } catch (e) {}
+        addLine(); show("f");
+      }).catch(function () { bad("Couldn't connect. Check your internet and open the link again."); });
+
+      $("product").onchange = function () {
+        $("otherwrap").classList.toggle("hide", $("product").value !== "__other");
+        document.querySelectorAll(".line datalist").forEach(function (dl) { dl.innerHTML = ""; sizesFor().forEach(function (s) { opt(dl, s); }); });
+      };
+      $("add").onclick = function () { addLine(); };
+      $("again").onclick = function () { resetForm(); show("f"); window.scrollTo(0, 0); };
+      $("f").onsubmit = function (e) {
+        e.preventDefault();
+        var err = $("err"); err.classList.add("hide");
+        var lines = [].slice.call(document.querySelectorAll(".line")).map(function (d) { return { size: d.querySelector(".size").value.trim(), qty: d.querySelector(".qty").value, price: d.querySelector(".price").value }; }).filter(function (l) { return l.size || l.price; });
+        var problem = !$("product").value ? "Choose the product." : $("product").value === "__other" && !$("other").value.trim() ? "Type the product name." :
+          !lines.length ? "Add at least one size with a price." : lines.some(function (l) { return !l.size || !l.price; }) ? "Each line needs a size and a price." : "";
+        if (problem) { err.textContent = problem; err.classList.remove("hide"); return; }
+        $("send").disabled = true; $("send").textContent = "Sending…";
+        try { localStorage.setItem("zx-price", JSON.stringify({ currency: $("currency").value, terms: $("terms").value })); } catch (e2) {}
+        fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+          t: token, productId: $("product").value === "__other" ? "" : $("product").value, otherProduct: $("other").value, lines: lines,
+          currency: $("currency").value, terms: $("terms").value, validUntil: $("valid").value, destination: $("dest").value,
+          availability: $("avail").value, remarks: $("remarks").value, website: $("website").value })
+        }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); }).then(function (res) {
+          if (!res.ok) { err.textContent = res.j.error || "Couldn't send. Please try again."; err.classList.remove("hide"); return; }
+          $("donemsg").textContent = "Your prices have been sent to Zetarah Exports" + (res.j.number ? " (reference " + res.j.number + ")" : "") + ". We'll confirm with you before offering them to a buyer.";
+          show("done"); window.scrollTo(0, 0);
+        }).catch(function () { err.textContent = "Couldn't send. Check your internet and try again."; err.classList.remove("hide"); })
+          .then(function () { $("send").disabled = false; $("send").textContent = "Send prices"; });
+      };
+    })();
+  </script>
+</body>
+</html>
