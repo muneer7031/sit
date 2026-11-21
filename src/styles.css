@@ -803,3 +803,9 @@ body.pl-lock { overflow: hidden; }
 /* Brand name beside the "z." icon: the logo's own typeface, Inter Display SemiBold (Inter at its display optical size) */
 .brand, .pl-brand b { font-family: "Inter", var(--font); font-weight: 600; font-variation-settings: "opsz" 32; font-optical-sizing: none; letter-spacing: -0.025em; }
 .foot-base a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Phones: the reveal animations keep their fade and slide but skip the blur, which is the costly part to draw.
+   (The blur is set inline by the animations, so this matches it there; the built HTML stays the same.) */
+@media (max-width: 760px), (pointer: coarse) {
+  [style*="blur("] { filter: none !important; }
+}

@@ -9,13 +9,17 @@ function useContours(ref) {
     const c = ref.current, ctx = c.getContext("2d");
     const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
     let w = 0, h = 0, t = 0, raf = 0, vis = true, mx = 0, my = 0, tx = 0, ty = 0;
+    // phones: fewer, coarser lines at half the frame rate (looks the same, a fraction of the work)
+    const lite = (() => { try { return matchMedia("(max-width: 760px), (pointer: coarse)").matches; } catch { return false; } })();
+    const N = lite ? 22 : 34, STEP = lite ? 18 : 10;
+    let frame = 0;
     function draw() {
       ctx.clearRect(0, 0, w, h);
-      const N = 34, hi = Math.floor(N * 0.58);
+      const hi = Math.floor(N * 0.58);
       for (let i = 0; i < N; i++) {
         const k = i / (N - 1), base = h * 0.12 + k * h * 0.98;
         ctx.beginPath();
-        for (let x = -20; x <= w + 20; x += 10) {
+        for (let x = -20; x <= w + 20; x += STEP) {
           const nx = x / Math.max(w, 1);
           const y = base + Math.sin(nx * 3.1 + i * 0.33 + t * 0.5) * 16 * (0.4 + k) + Math.sin(nx * 7.3 - i * 0.21 + t * 0.3) * 6
             - Math.pow(nx, 1.5) * h * 0.16 * (1 - k) + mx * 26 * (k - 0.5) + my * 12 * k;
@@ -31,7 +35,7 @@ function useContours(ref) {
       w = r.width; h = r.height; c.width = Math.round(w * d); c.height = Math.round(h * d);
       ctx.setTransform(d, 0, 0, d, 0, 0); draw();
     }
-    const loop = () => { t += 0.0035; mx += (tx - mx) * 0.035; my += (ty - my) * 0.035; draw(); raf = vis ? requestAnimationFrame(loop) : 0; };
+    const loop = () => { t += 0.0035; mx += (tx - mx) * 0.035; my += (ty - my) * 0.035; if (!lite || frame++ % 2 === 0) draw(); raf = vis ? requestAnimationFrame(loop) : 0; };
     const move = (e) => { tx = e.clientX / innerWidth - 0.5; ty = e.clientY / innerHeight - 0.5; };
     size(); addEventListener("resize", size);
     let io;

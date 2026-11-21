@@ -12,6 +12,8 @@ import { ScrollProgress } from "./motion.jsx";
 
 const isServer = typeof window === "undefined";
 const seenBefore = () => { try { return localStorage.getItem("sx-seen") === "1"; } catch { return false; } };
+// Phones always get the short intro (the same story, about 2.5 seconds) so the page is ready sooner
+const isPhone = () => { try { return matchMedia("(max-width: 760px), (pointer: coarse)").matches; } catch { return false; } };
 
 export default function App() {
   return <SiteMediaProvider><Site /></SiteMediaProvider>;
@@ -22,7 +24,7 @@ function Site() {
   const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
   const [loading, setLoading] = useState(!reduce && !isServer); // preloader every visit (skipped only for the build-time render)
   const [ready, setReady] = useState(!!reduce || isServer);       // hero intro trigger
-  const [quick] = useState(() => !isServer && seenBefore());       // repeat visitors get the 3-second version
+  const [quick] = useState(() => !isServer && (seenBefore() || isPhone())); // repeat visitors and phones get the short version
   const [sheet, setSheet] = useState(null);
   const [prefill, setPrefill] = useState(null);
   const lenis = useRef(null);
