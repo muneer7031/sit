@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Your order | Zetarah Exports</title>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    :root { --bg: #F5F4F0; --card: #fff; --ink: #0E2235; --muted: #5E6B7A; --line: #E2E0DA; --accent: #E0703A; --good: #15803D; color-scheme: light; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif; }
+    header { background: #0E2235; color: #fff; }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+    header .wrap { display: flex; align-items: center; gap: 10px; height: 60px; font-weight: 600; letter-spacing: -0.02em; }
+    header img { width: 30px; height: 30px; border-radius: 22%; }
+    main { padding: 22px 0 60px; }
+    h1 { font-size: 1.7rem; line-height: 1.15; margin: 0 0 4px; letter-spacing: -0.02em; }
+    h2 { font-size: 1.05rem; margin: 0 0 10px; }
+    .muted { color: var(--muted); }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin: 14px 0; }
+    .pill { display: inline-block; padding: 4px 12px; border-radius: 999px; background: #FDF0E8; color: #B4501F; font-weight: 700; font-size: .85rem; }
+    .lines { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+    .lines li { padding: 4px 10px; border-radius: 8px; background: var(--bg); font-size: .9rem; }
+    .steps { list-style: none; margin: 4px 0 0; padding: 0; }
+    .steps li { position: relative; padding: 0 0 16px 30px; color: var(--muted); }
+    .steps li::before { content: ""; position: absolute; left: 6px; top: 4px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #CFCAC0; background: #fff; }
+    .steps li::after { content: ""; position: absolute; left: 12px; top: 18px; bottom: 0; width: 2px; background: #E2E0DA; }
+    .steps li:last-child::after { display: none; }
+    .steps li.done { color: var(--ink); font-weight: 600; }
+    .steps li.done::before { background: var(--good); border-color: var(--good); }
+    .steps li.done::after { background: var(--good); }
+    .steps li.now::before { box-shadow: 0 0 0 5px rgba(21,128,61,.18); }
+    .steps small { display: block; font-weight: 400; color: var(--muted); }
+    dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px 16px; margin: 0; }
+    dt { font-size: .78rem; color: var(--muted); } dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 16px; border-radius: 999px; font-weight: 600; text-decoration: none; border: 1px solid var(--line); color: var(--ink); background: #fff; }
+    .btn.main { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.wa { background: #25D366; border-color: #25D366; color: #fff; }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .docs { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+    .docs a { display: flex; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; color: inherit; text-decoration: none; }
+    .docs a:hover { border-color: var(--accent); }
+    .err { color: #B42318; font-weight: 600; }
+    .hide { display: none !important; }
+    footer { text-align: center; font-size: .8rem; color: var(--muted); padding: 20px 0 40px; }
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><img src="/img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</div></header>
+  <main class="wrap">
+    <p id="loading" class="muted">Loading your order…</p>
+    <div id="bad" class="card hide"><p class="err" id="badmsg"></p></div>
+    <div id="page" class="hide">
+      <p class="muted" id="hello" style="margin:0"></p>
+      <h1 id="title"></h1>
+      <p style="margin:6px 0 0"><span class="pill" id="status"></span> <span class="muted" id="updated"></span></p>
+
+      <div class="card">
+        <h2>Your order</h2>
+        <dl id="facts"></dl>
+        <ul class="lines" id="lines"></ul>
+      </div>
+      <div class="card"><h2>Progress</h2><ol class="steps" id="steps"></ol></div>
+      <div id="ships"></div>
+      <div class="card">
+        <h2>Questions?</h2>
+        <p class="muted" style="margin:0">Message us any time about this order.</p>
+        <div class="row" id="contact"></div>
+      </div>
+    </div>
+  </main>
+  <footer>This page updates as your order moves. <a href="/privacy.html">Privacy</a></footer>
+  <script>
+    (function () {
+      var API = "https://ocdfjuvesnkimqiexqyw.supabase.co/functions/v1/order-status";
+      var token = (location.hash.match(/t=([A-Za-z0-9_-]+)/) || location.search.match(/t=([A-Za-z0-9_-]+)/) || [])[1] || "";
+      var $ = function (id) { return document.getElementById(id); };
+      var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+      var day = function (d) { if (!d) return ""; var x = new Date(d); return isNaN(x) ? esc(d) : x.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }); };
+      function bad(m) { $("loading").classList.add("hide"); $("badmsg").textContent = m; $("bad").classList.remove("hide"); }
+      function facts(el, rows) { el.innerHTML = rows.filter(function (r) { return r[1]; }).map(function (r) { return "<div><dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd></div>"; }).join(""); }
+      if (!token) return bad("This link is incomplete. Please open the full link Zetarah Exports sent you.");
+      fetch(API + "?t=" + encodeURIComponent(token), { cache: "no-store" }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); }).then(function (res) {
+        if (!res.ok) return bad(res.j.error || "This link isn't working. Please ask Zetarah Exports for a new one.");
+        var d = res.j, o = d.order;
+        document.title = "Order " + o.number + " | Zetarah Exports";
+        $("hello").textContent = o.buyer ? "For " + o.buyer : "";
+        $("title").textContent = (o.product || "Order") + " · " + o.number;
+        $("status").textContent = o.status;
+        $("updated").textContent = o.updatedAt ? "Updated " + day(o.updatedAt) : "";
+        facts($("facts"), [["Product", [o.product, o.presentation].filter(Boolean).join(", ")], ["Packing", o.packing], ["Destination", o.destination], ["Ship by", day(o.deadline)]]);
+        $("lines").innerHTML = (o.lines || []).map(function (l) { return "<li>" + esc(l.size) + (l.qty ? " · " + esc(l.qty) + " MT" : "") + "</li>"; }).join("");
+        var nowIdx = -1; (o.steps || []).forEach(function (s, i) { if (s.done) nowIdx = i; });
+        $("steps").innerHTML = (o.steps || []).map(function (s, i) { return '<li class="' + (s.done ? "done" : "") + (i === nowIdx ? " now" : "") + '">' + esc(s.label) + (s.at ? "<small>" + day(s.at) + "</small>" : "") + "</li>"; }).join("");
+        $("ships").innerHTML = (d.shipments || []).map(function (s) {
+          var dl = [["Container", s.container && (s.container + (s.containerType ? " (" + s.containerType + ")" : ""))], ["Shipping line", s.line], ["Vessel", s.vessel], ["From", s.loadingPort], ["To", s.destPort], ["Departs (ETD)", day(s.etd)], ["Arrives (ETA)", day(s.eta)], ["Bill of lading", s.bl]]
+            .filter(function (r) { return r[1]; }).map(function (r) { return "<div><dt>" + esc(r[0]) + "</dt><dd>" + esc(r[1]) + "</dd></div>"; }).join("");
+          var docs = (s.docs || []).map(function (x) { return '<li><a href="' + esc(x.url) + '" rel="noreferrer">' + "<span><b>" + esc(x.type || "Document") + "</b><br><span class='muted'>" + esc(x.name) + "</span></span><span>Download</span></a></li>"; }).join("");
+          var ready = (s.docsReady || []).length ? "<p class='muted' style='margin:10px 0 0;font-size:.85rem'>Documents prepared: " + s.docsReady.map(esc).join(", ") + "</p>" : "";
+          return '<div class="card"><h2>Shipment ' + esc(s.number) + ' <span class="pill" style="margin-left:6px">' + esc(s.status) + "</span></h2><dl>" + dl + "</dl>" +
+            (s.tracking ? '<div class="row"><a class="btn main" href="' + esc(s.tracking) + '" target="_blank" rel="noreferrer">Track container</a></div>' : "") +
+            (docs ? "<h2 style='margin-top:16px'>Documents</h2><ul class='docs'>" + docs + "</ul>" : ready) + "</div>";
+        }).join("");
+        var c = d.contact || {}, ph = String(c.phone || "").replace(/\D/g, "");
+        $("contact").innerHTML = (ph ? '<a class="btn wa" href="https://wa.me/' + ph + "?text=" + encodeURIComponent("Hello, about order " + o.number + ": ") + '" target="_blank" rel="noreferrer">WhatsApp us</a>' : "") +
+          (c.email ? '<a class="btn" href="mailto:' + esc(c.email) + "?subject=" + encodeURIComponent("Order " + o.number) + '">Email us</a>' : "");
+        $("loading").classList.add("hide"); $("page").classList.remove("hide");
+      }).catch(function () { bad("Couldn't connect. Check your internet and open the link again."); });
+    })();
+  </script>
+</body>
+</html>
