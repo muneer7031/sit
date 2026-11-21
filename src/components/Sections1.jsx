@@ -63,7 +63,7 @@ function Card({ p, i, onOpen }) {
   };
   const leave = () => { rx.set(0); ry.set(0); go.set(0); };
   return (
-    <motion.article className="p-card" tabIndex={0} role="button" aria-label={`View ${p.n} details`}
+    <motion.div className="p-card" tabIndex={0} role="button" aria-haspopup="dialog"
       onClick={() => onOpen(i)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(i); } }}
       onPointerMove={move} onPointerLeave={leave}
       style={{ rotateX, rotateY, transformPerspective: 900 }}
@@ -74,7 +74,7 @@ function Card({ p, i, onOpen }) {
         <div><small>{p.tag}</small><h3>{p.n}</h3><p>{p.desc}</p></div>
         <span className="go" aria-hidden="true"><Plus /></span>
       </div>
-    </motion.article>
+    </motion.div>
   );
 }
 
