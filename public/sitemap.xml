@@ -8,4 +8,10 @@
     <image:image><image:loc>https://sit-virid.vercel.app/img/og.jpg</image:loc></image:image>
     <image:image><image:loc>https://sit-virid.vercel.app/img/frozen-shrimp-packed-in-export-trays.webp</image:loc></image:image>
   </url>
+  <url>
+    <loc>https://sit-virid.vercel.app/privacy.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
 </urlset>

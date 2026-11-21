@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimate, useInView, useScroll, useTransform } from "framer-motion";
+import C, { noteWords } from "../content.js";
 import { useSite, submitEnquiry, TURNSTILE_SITE_KEY } from "../site.jsx";
 import { DEST, EMAIL, FAQ, FAR, FORM_PRODUCTS, GENERATIONS, HOME, PHONE, PHONE_DISPLAY, STEPS, proj, wa } from "../data.js";
 import { track } from "../analytics.js";
@@ -107,8 +108,8 @@ export function Routes() {
       <div className="wrap routes-grid">
         <div>
           <p className="eyebrow">Shipping lanes</p>
-          <Reveal as="h2" id="routes-title" className="h-lg" style={{ marginTop: "1.2rem" }}>From Cochin to <em className="s">every part of the world.</em></Reveal>
-          <Reveal as="p" className="lead" style={{ marginTop: "1.2rem" }} delay={0.08}>Over the decades we have shipped to buyers in every part of the world, most often in the Middle East, Asia and Europe. Every order is dispatched from Cochin.</Reveal>
+          <Reveal as="h2" id="routes-title" className="h-lg" style={{ marginTop: "1.2rem" }}>{C.routes.title} <em className="s">{C.routes.titleEm}</em></Reveal>
+          <Reveal as="p" className="lead" style={{ marginTop: "1.2rem" }} delay={0.08}>{C.routes.lead}</Reveal>
           <Reveal className="lane-filter" role="group" aria-label="Show shipping lanes by region" delay={0.14}>
             {[["all", "All lanes"], ["me", "Middle East"], ["as", "Asia"], ["eu", "Europe"], ["world", "Africa, North America & Australia"]].map(([r, l]) => (
               <motion.button key={r} type="button" aria-pressed={region === r} onClick={() => setRegion(r)} whileTap={{ scale: 0.95 }}>
@@ -170,14 +171,15 @@ function Stat({ to, from, plus, label, i }) {
   );
 }
 
-function Generation({ g }) {
+function Generation({ g, slot }) {
   const [on, setOn] = useState(false);
+  const { founders } = useSite();
   const side = g.rev ? -70 : 70;
   return (
     <motion.article className={`fam${g.rev ? " rev" : ""}${on ? " on" : ""}`} initial="h" whileInView="s" viewport={{ once: true, margin: "0px 0px -22% 0px" }} onViewportEnter={() => setOn(true)}>
       <div className="fr">
         <motion.div className="frame" variants={{ h: { scale: 0.6, rotate: g.rev ? 25 : -25, opacity: 0 }, s: { scale: 1, rotate: 0, opacity: 1 } }} transition={{ duration: 1.3, ease: EASE }} whileHover={{ scale: 1.03 }}>
-          <div className="ph0"><motion.img src={g.img} alt={g.alt} loading="lazy" variants={{ h: { scale: 1.35 }, s: { scale: 1 } }} transition={{ duration: 1.6, ease: EASE }} /></div>
+          <div className="ph0"><motion.img src={founders?.[slot] || g.img} alt={g.alt} loading="lazy" variants={{ h: { scale: 1.35 }, s: { scale: 1 } }} transition={{ duration: 1.6, ease: EASE }} /></div>
         </motion.div>
       </div>
       <motion.div className="gt" variants={{ s: { transition: { staggerChildren: 0.12, delayChildren: 0.2 } } }}>
@@ -203,8 +205,8 @@ export function Heritage() {
       <div className="wrap">
         <p className="eyebrow">Our heritage</p>
         <MaskLines as="h2" id="heritage-title" className="h-xl" style={{ marginTop: "1.2rem" }}
-          lines={["Three generations.", <em className="s" style={{ color: "var(--cream)" }}>One promise.</em>]} />
-        <Reveal as="p" className="lead" style={{ marginTop: "1.4rem" }}>Our family has traded seafood from Chandiroor since 1967: first as Sithara Exports, and now as Zetarah Exports, its third generation.</Reveal>
+          lines={[C.heritage.title, <em className="s" style={{ color: "var(--cream)" }}>{C.heritage.titleEm}</em>]} />
+        <Reveal as="p" className="lead" style={{ marginTop: "1.4rem" }}>{C.heritage.lead}</Reveal>
         <div className="stats">
           <Stat i={0} to={1967} from={1900} label="The year Mohammed began exporting shrimp from Chandiroor" />
           <Stat i={1} to={3} label="Generations of one family, one name on every shipment" />
@@ -214,10 +216,10 @@ export function Heritage() {
 
         <div className="wall" ref={wall}>
           <div className="wall-line" aria-hidden="true"><motion.span style={{ scaleY: scrollYProgress }} /></div>
-          {GENERATIONS.map((g) => <Generation key={g.h} g={g} />)}
+          {GENERATIONS.map((g, i) => <Generation key={g.h} g={g} slot={`g${i + 1}`} />)}
         </div>
 
-        <ScrollWords as="p" className="wallq" parts={[{ t: "The family lineage continues." }, { t: "Always aspiring, in every shipment.", em: true }]} />
+        <ScrollWords as="p" className="wallq" parts={[{ t: C.heritage.wall }, { t: C.heritage.wallEm, em: true }]} />
 
         <Reveal className="namecard">
           <small>The name</small>
@@ -231,10 +233,11 @@ export function Heritage() {
 }
 
 /* ---------------- Note from the third generation ---------------- */
-const NOTE = "Every shipment we send carries three generations of effort, and I take that seriously. Honest dealings, packing the way you ask for it, and the same care from the first order to the hundredth.";
-const HL = [5, 6, 7, 8]; // "three generations of effort," gets a marker underline
+// The note is editable in the dashboard; words between *stars* get the marker underline
+const { words: NOTE_WORDS, hl: HL } = noteWords(C.note.text);
 export function Note() {
-  const words = NOTE.split(" ");
+  const { founders } = useSite();
+  const words = NOTE_WORDS;
   const NOTE_VIEW = { once: true, margin: "0px 0px -18% 0px" };
   return (
     <section className="note" aria-label="A note from the third generation">
@@ -254,10 +257,10 @@ export function Note() {
             </motion.span>
           ))}
         </motion.blockquote>
-        <Reveal as="p" className="more" delay={0.3}>My grandfather, Mohammed, started Sithara Exports in 1967. In 1996 he handed it to my father, Shaji, and today I carry our family’s trade forward as Zetarah Exports. Whether you have worked with us for years or are writing to us for the first time, I would be glad to hear from you personally.</Reveal>
+        <Reveal as="p" className="more" delay={0.3}>{C.note.more}</Reveal>
         <motion.div className="sig" initial="h" whileInView="s" viewport={{ once: true, margin: "0px 0px -6% 0px" }}>
           <span className="sig-photo">
-            <motion.img src="img/muzammil-third-generation-of-sithara-exp.webp" alt="" variants={{ h: { scale: 0.8, opacity: 0 }, s: { scale: 1, opacity: 1 } }} transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.1 }} />
+            <motion.img src={founders?.g3 || "img/muzammil-third-generation-of-sithara-exp.webp"} alt="" variants={{ h: { scale: 0.8, opacity: 0 }, s: { scale: 1, opacity: 1 } }} transition={{ type: "spring", stiffness: 220, damping: 16, delay: 0.1 }} />
             <svg viewBox="0 0 64 64" aria-hidden="true">
               <motion.circle cx="32" cy="32" r="30" fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round"
                 variants={{ h: { pathLength: 0 }, s: { pathLength: 1 } }} transition={{ duration: 1.4, ease: EASE, delay: 0.2 }} />
@@ -284,8 +287,8 @@ export function Process() {
       <div className="wrap">
         <div className="head">
           <p className="eyebrow">How we work</p>
-          <Reveal as="h2" id="process-title" className="h-lg">Tell us the catch. <em className="s">We’ll handle the rest.</em></Reveal>
-          <Reveal as="p" className="lead" delay={0.08}>A simple, transparent path from your inquiry to your port.</Reveal>
+          <Reveal as="h2" id="process-title" className="h-lg">{C.process.title} <em className="s">{C.process.titleEm}</em></Reveal>
+          <Reveal as="p" className="lead" delay={0.08}>{C.process.lead}</Reveal>
         </div>
         <div className="track" ref={track}>
           <div className="track-line">
@@ -359,7 +362,7 @@ export function Gallery() {
   return (
     <section className="gallery-s" id="gallery" aria-labelledby="gallery-title">
       <div className="wrap">
-        <div className="head"><div><p className="eyebrow">Product gallery</p><Reveal as="h2" id="gallery-title" className="h-lg">Straight from <em className="s">the packing floor.</em></Reveal></div></div>
+        <div className="head"><div><p className="eyebrow">Product gallery</p><Reveal as="h2" id="gallery-title" className="h-lg">{C.gallery.title} <em className="s">{C.gallery.titleEm}</em></Reveal></div></div>
         <div className="gallery">{GALLERY.map(([c, s, a, cap], i) => <Shot key={c} i={i} cls={c} src={s} alt={a} cap={cap} hidden={open !== null && origin === i} onOpen={openAt} />)}</div>
       </div>
       <AnimatePresence>{open !== null && <Lightbox key="lb" i={open} origin={origin} onClose={close} onNav={nav} />}</AnimatePresence>
@@ -376,7 +379,7 @@ export function Voices() {
       <div className="wrap">
         <div className="head center">
           <p className="eyebrow">Testimonials</p>
-          <Reveal as="h2" id="t-title" className="h-lg">In our buyers’ <em className="s">own words.</em></Reveal>
+          <Reveal as="h2" id="t-title" className="h-lg">{C.testimonials.title} <em className="s">{C.testimonials.titleEm}</em></Reveal>
         </div>
         <div className="quotes">
           {testimonials.map((t, i) => (
@@ -416,8 +419,8 @@ export function Faq() {
       <div className="wrap faq-grid">
         <div className="head">
           <p className="eyebrow">FAQ</p>
-          <Reveal as="h2" id="faq-title" className="h-lg">Questions importers <em className="s">often ask.</em></Reveal>
-          <Reveal as="p" className="lead" delay={0.08}>Can’t find your answer? Message us on WhatsApp and we’ll reply personally.</Reveal>
+          <Reveal as="h2" id="faq-title" className="h-lg">{C.faq.title} <em className="s">{C.faq.titleEm}</em></Reveal>
+          <Reveal as="p" className="lead" delay={0.08}>{C.faq.lead}</Reveal>
         </div>
         <div className="faq">{FAQ.map(([q, a], i) => <QA key={q} q={q} a={a} open={open === i} onToggle={() => setOpen(open === i ? -1 : i)} />)}</div>
       </div>
@@ -476,8 +479,8 @@ export function Contact({ prefill }) {
       <div className="wrap contact">
         <div>
           <p className="eyebrow">Contact</p>
-          <MaskLines as="h2" id="contact-title" className="h-xl" lines={["Let’s talk about", <em className="s">your next order.</em>]} />
-          <Reveal as="p" className="lead">Send your requirement and we’ll reply with prices and availability.</Reveal>
+          <MaskLines as="h2" id="contact-title" className="h-xl" lines={[C.contact.title, <em className="s">{C.contact.titleEm}</em>]} />
+          <Reveal as="p" className="lead">{C.contact.lead}</Reveal>
           <Reveal as="dl" className="lines" delay={0.08}>
             <div><dt>Location</dt><dd>Chandiroor, near Aroor, Cochin, Kerala, India</dd></div>
             <div><dt>Email</dt><dd><a href={`mailto:${EMAIL}`}>{EMAIL}</a></dd></div>
@@ -539,12 +542,12 @@ export function Footer() {
       <div className="wrap">
         <div className="horizon" aria-hidden="true"><span className="boat"><ShipIcon /></span></div>
         <div className="foot-top">
-          <div><a className="brand" href="#top"><img src="img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</a><p>Three generations. One family. One standard.<br />A family seafood trade since 1967, now Zetarah Exports.</p></div>
+          <div><a className="brand" href="#top"><img src="img/zetarah-exports-logo.svg" alt="" />Zetarah Exports</a><p>{C.footer.line1}<br />{C.footer.line2}</p></div>
           <div><b>Company</b><a href="#about">About</a><a href="#heritage">Heritage</a><a href="#process">How we work</a></div>
           <div><b>Seafood</b><a href="#products">Shrimps</a><a href="#products">Cuttlefish &amp; Squid</a><a href="#products">Live Mud Crabs</a></div>
           <div><b>Contact</b><a href={`mailto:${EMAIL}`}>{EMAIL}</a><a href={`tel:+${PHONE}`}>{PHONE_DISPLAY}</a><a href={wa()} target="_blank" rel="noopener">WhatsApp</a><span>Chandiroor · Cochin · Kerala</span></div>
         </div>
-        <div className="foot-base"><span>Copyright © {new Date().getFullYear()} Zetarah Exports. All rights reserved.</span><span>Three generations · Since 1967</span></div>
+        <div className="foot-base"><span>Copyright © {new Date().getFullYear()} Zetarah Exports. All rights reserved.</span><span><a href="/privacy.html">Privacy policy</a> · Three generations · Since 1967</span></div>
       </div>
     </footer>
   );

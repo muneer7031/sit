@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import C from "../content.js";
 import { ALSO, wa } from "../data.js";
 import { formOption, useSite } from "../site.jsx";
 import { track } from "../analytics.js";
@@ -25,9 +26,9 @@ export function Statement() {
       <div className="wrap">
         <p className="eyebrow">About us</p>
         <ScrollWords as="h2" id="about-title" className="big"
-          parts={[{ t: "We measure every shipment by" }, { t: "your satisfaction.", em: true }]} />
+          parts={[{ t: C.about.title }, { t: C.about.titleEm, em: true }]} />
         <div className="features">
-          {FEATURES.map(([h, p, icon], i) => (
+          {FEATURES.map(([, , icon], i) => [...C.about.features[i], icon]).map(([h, p, icon], i) => (
             <Reveal className="feature" key={h} delay={i * 0.08}>
               <div className="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{icon}</svg></div>
               <h3>{h}</h3><p>{p}</p>
@@ -109,8 +110,8 @@ export function Products({ onOpen }) {
       <div className="reel-head">
         <div>
           <p className="eyebrow">Our seafood</p>
-          <Reveal as="h2" id="products-title" className="h-lg" style={{ marginTop: "1.2rem" }}>Catch, selected <em className="s">and packed.</em></Reveal>
-          <Reveal as="p" className="lead" delay={0.08}>A selection from our range. Tap any product for details. Don’t see your species? We source more than 20 varieties on request.</Reveal>
+          <Reveal as="h2" id="products-title" className="h-lg" style={{ marginTop: "1.2rem" }}>{C.products.title} <em className="s">{C.products.titleEm}</em></Reveal>
+          <Reveal as="p" className="lead" delay={0.08}>{C.products.lead}</Reveal>
         </div>
         <div className="reel-meta"><span>{pin ? "Scroll to explore" : "Swipe to explore"} · {PRODUCTS.length} lines</span>
           <div className="reel-progress"><motion.span style={{ scaleX: pin ? bar : 0.12 + nativeP * 0.88, transformOrigin: "left" }} /></div>
@@ -228,9 +229,9 @@ export function Offers({ onRequest }) {
         <div className="offers-head">
           <div>
             <p className="eyebrow"><span className="live-dot" aria-hidden="true" />Available now</p>
-            <Reveal as="h2" id="offers-title" className="h-lg" style={{ marginTop: "1.2rem" }}>This week’s <em className="s">ready stock.</em></Reveal>
+            <Reveal as="h2" id="offers-title" className="h-lg" style={{ marginTop: "1.2rem" }}>{C.offers.title} <em className="s">{C.offers.titleEm}</em></Reveal>
           </div>
-          <Reveal as="p" className="lead" delay={0.08}>Confirmed lots we can offer right now. Prices on request, quoted for your port.</Reveal>
+          <Reveal as="p" className="lead" delay={0.08}>{C.offers.lead}</Reveal>
         </div>
         <div className="offer-grid">
           {offers.map((o, i) => (

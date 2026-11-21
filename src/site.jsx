@@ -4,7 +4,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { GALLERY, PRODUCTS } from "./data.js";
 
-const Ctx = createContext({ products: PRODUCTS, gallery: GALLERY, testimonials: [], offers: [] });
+const Ctx = createContext({ products: PRODUCTS, gallery: GALLERY, founders: {}, testimonials: [], offers: [] });
 // Photos published from the online dashboard (Supabase public storage)
 const SUPABASE = "https://ocdfjuvesnkimqiexqyw.supabase.co";
 const ONLINE = `${SUPABASE}/storage/v1/object/public/public-media/manifest.json`;
@@ -27,7 +27,7 @@ export const formOption = (name) => { const n = norm(name); return /shrimp|prawn
 
 export function merge(manifest) {
   // Product photos come only from the dashboard; until it has published one, the card shows a plain panel.
-  if (!manifest) return { products: PRODUCTS, gallery: GALLERY };
+  if (!manifest) return { products: PRODUCTS, gallery: GALLERY, founders: {} };
   const list = manifest.products || [];
   const products = PRODUCTS.map((p) => {
     const hit = list.find((m) => norm(m.name) === norm(p.n)) || list.find((m) => norm(m.name).startsWith(norm(p.n)) || norm(p.n).startsWith(norm(m.name)));
@@ -39,7 +39,9 @@ export function merge(manifest) {
   }
   // Layout classes g1–g6 repeat, so any number of photos keeps the mosaic shape
   const gallery = (manifest.gallery || []).map((g, i) => [`g${(i % 6) + 1} gi-${i}`, g.image, g.alt || g.caption || "Zetarah Exports seafood", g.caption || g.alt || ""]);
-  return { products, gallery };
+  // Founder photos (Heritage section): g1 Mohammed, g2 Shaji, g3 Muzammil. Missing ones keep the built-in photo.
+  const founders = Object.fromEntries(Object.entries(manifest.founders || {}).filter(([k, v]) => /^g[123]$/.test(k) && typeof v === "string" && /^https:\/\//.test(v)));
+  return { products, gallery, founders };
 }
 
 export function SiteMediaProvider({ children }) {
@@ -47,8 +49,8 @@ export function SiteMediaProvider({ children }) {
   useEffect(() => {
     const get = (url) => fetch(url, { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
     Promise.all([get("media/manifest.json"), get(`${ONLINE}?t=${Date.now()}`)]).then((list) => {
-      const ms = list.filter((m) => m && (m.products?.length || m.gallery?.length));
-      if (ms.length) setManifest({ products: ms.flatMap((m) => m.products || []), gallery: ms.flatMap((m) => m.gallery || []) });
+      const ms = list.filter((m) => m && (m.products?.length || m.gallery?.length || (m.founders && Object.keys(m.founders).length)));
+      if (ms.length) setManifest({ products: ms.flatMap((m) => m.products || []), gallery: ms.flatMap((m) => m.gallery || []), founders: Object.assign({}, ...ms.map((m) => m.founders || {})) });
     });
   }, []);
   // Testimonials (dashboard → Testimonials → "Save to website") and offers (offer page → "Show on the website").
