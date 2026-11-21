@@ -809,3 +809,21 @@ body.pl-lock { overflow: hidden; }
 @media (max-width: 760px), (pointer: coarse) {
   [style*="blur("] { filter: none !important; }
 }
+
+/* Returning visitors on phones (html.fast): no intro; the hero plays its entrance in CSS as soon as the page is
+   drawn, without waiting for the JavaScript. Animations override the "hidden until animated" inline styles. */
+@keyframes hx-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes hx-line { from { transform: translateY(118%) rotate(3deg); } to { transform: none; } }
+@keyframes hx-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hx-pop { from { transform: scale(0) rotate(-35deg); } to { transform: none; } }
+html.fast .hero .eyebrow { animation: hx-rise .8s cubic-bezier(.2,.7,.2,1) .05s both; }
+html.fast #hero-title .line > span { display: inline-block; animation: hx-line .9s cubic-bezier(.2,.7,.2,1) .1s both; }
+html.fast #hero-title .line + .line > span, html.fast #hero-title .line:nth-of-type(2) > span { animation-delay: .2s; }
+html.fast .hero .hero-sub { animation: hx-rise .8s cubic-bezier(.2,.7,.2,1) .25s both; }
+html.fast .hero .hero-ctas { animation: hx-rise .8s cubic-bezier(.2,.7,.2,1) .35s both; }
+html.fast .hero .ship-strip { animation: hx-rise .8s cubic-bezier(.2,.7,.2,1) .45s both; }
+html.fast .hero .prawn { animation: hx-fade 1s ease-out .1s both; }
+html.fast .hero .prawn-wrap { animation: hx-rise 1.2s cubic-bezier(.2,.7,.2,1) both; }
+html.fast .hero .pool, html.fast .hero .dust, html.fast .hero-canvas { animation: hx-fade 1.2s ease-out .2s both; }
+html.fast .lnav { animation: hx-rise .8s cubic-bezier(.2,.7,.2,1) both; }
+html.fast .wa-fab { animation: hx-pop .6s cubic-bezier(.3,1.6,.5,1) 1s both; }

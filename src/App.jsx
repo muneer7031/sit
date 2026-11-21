@@ -12,8 +12,10 @@ import { ScrollProgress } from "./motion.jsx";
 
 const isServer = typeof window === "undefined";
 const seenBefore = () => { try { return localStorage.getItem("sx-seen") === "1"; } catch { return false; } };
-// Phones always get the short intro (the same story, about 2.5 seconds) so the page is ready sooner
+// Phones: the short intro (about 2.5 seconds) on the first visit; after that they open straight on the hero, whose
+// entrance is played by CSS the moment the page appears (html.fast, set by the script in index.html).
 const isPhone = () => { try { return matchMedia("(max-width: 760px), (pointer: coarse)").matches; } catch { return false; } };
+const fastPhone = () => !isServer && seenBefore() && isPhone();
 
 export default function App() {
   return <SiteMediaProvider><Site /></SiteMediaProvider>;
@@ -22,8 +24,8 @@ export default function App() {
 function Site() {
   const { products: PRODUCTS } = useSite();
   const reduce = false; // full animations on every phone, even with 'reduce motion' / battery saver on (owner's choice)
-  const [loading, setLoading] = useState(!reduce && !isServer); // preloader every visit (skipped only for the build-time render)
-  const [ready, setReady] = useState(!!reduce || isServer);       // hero intro trigger
+  const [loading, setLoading] = useState(!reduce && !isServer && !fastPhone()); // preloader (not for returning phone visitors, nor the build-time render)
+  const [ready, setReady] = useState(!!reduce || isServer || fastPhone());       // hero intro trigger
   const [quick] = useState(() => !isServer && (seenBefore() || isPhone())); // repeat visitors and phones get the short version
   const [sheet, setSheet] = useState(null);
   const [prefill, setPrefill] = useState(null);
