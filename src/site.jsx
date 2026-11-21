@@ -48,7 +48,8 @@ export function SiteMediaProvider({ children }) {
   const [manifest, setManifest] = useState(null);
   useEffect(() => {
     const get = (url) => fetch(url, { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
-    Promise.all([get("media/manifest.json"), get(`${ONLINE}?t=${Date.now()}`)]).then((list) => {
+    // (The old offline photo package, media/manifest.json, is no longer used: asking for it gave a 404 on every visit.)
+    Promise.all([get(`${ONLINE}?t=${Date.now()}`)]).then((list) => {
       const ms = list.filter((m) => m && (m.products?.length || m.gallery?.length || (m.founders && Object.keys(m.founders).length)));
       if (ms.length) setManifest({ products: ms.flatMap((m) => m.products || []), gallery: ms.flatMap((m) => m.gallery || []), founders: Object.assign({}, ...ms.map((m) => m.founders || {})) });
     });
